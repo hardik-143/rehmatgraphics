@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html {
   scroll-behavior: smooth;
@@ -18,22 +20,6 @@ html {
   --white-smoke: #f5f5f0;
   --saffron-mango: #f5c857;
   --saffron-mango-light: #f5c85743;
-}
-
-@theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  // --font-sans: var(--font-geist-sans);
-  // --font-mono: var(--font-geist-mono);
-  --font-sans-serif: var(--font-montserrat);
-  --punch-red: var(--punch-red);
-  --honeydew: var(--honeydew);
-  --frosted-blue: var(--frosted-blue);
-  --cerulean: var(--cerulean);
-  --oxford-navy: var(--oxford-navy);
-  --vista-white: var(--vista-white);
-  --white-smoke: var(--white-smoke);
-  --punch-red-light: var(--punch-red-light);
 }
 
 body {
@@ -172,7 +158,7 @@ body {
       color: var(--foreground);
       border-bottom-right-radius: 8px;
       cursor: pointer;
-      @apply transition-all duration-250 ease-linear opacity-0 -translate-x-2  -translate-y-2 group-hover/container:opacity-100 group-hover/container:translate-x-0 group-hover/container:translate-y-0;
+      @apply transition-all duration-200 ease-linear opacity-0 -translate-x-2  -translate-y-2 group-hover/container:opacity-100 group-hover/container:translate-x-0 group-hover/container:translate-y-0;
     }
     .code-copy-button {
       position: absolute;
@@ -185,7 +171,7 @@ body {
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      @apply transition-all duration-250 text-white ease-linear opacity-0 translate-x-2  -translate-y-2 group-hover/container:opacity-100 group-hover/container:translate-x-0 group-hover/container:translate-y-0;
+      @apply transition-all duration-200 text-white ease-linear opacity-0 translate-x-2  -translate-y-2 group-hover/container:opacity-100 group-hover/container:translate-x-0 group-hover/container:translate-y-0;
     }
     pre {
       padding-top: 1.5rem;
