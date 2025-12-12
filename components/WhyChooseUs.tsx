@@ -33,7 +33,7 @@ const features = [
 ];
 
 const WhyChooseUs = ({
-  heading = "Why Choose Mamaji",
+  heading = "Why Choose Rehmat Graphics?",
   subheading = "Trade-only printing with enterprise reliability and boutique flexibility.",
 }: WhyChooseUsProps) => {
   return (

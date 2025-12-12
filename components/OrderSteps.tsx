@@ -43,7 +43,7 @@ const cardGradients = [
 ];
 
 const OrderSteps = ({
-  heading = "Order Online with Mamaji",
+  heading = "Order Online with Rehmat Graphics",
   subheading = "A simplified workflow built for professional print resellers.",
   steps = defaultSteps,
 }: OrderStepsProps) => {

@@ -44,12 +44,12 @@ const Navbar = ({
           <Link
             href="/"
             className="flex items-center gap-3"
-            aria-label="Mamaji Print Home"
+            aria-label="Rehmat Graphics Home"
           >
             <div className="relative h-11 w-32">
               <Image
                 src={logoSrc}
-                alt="Mamaji Print logo"
+                alt="Rehmat Graphics logo"
                 fill
                 sizes="128px"
                 className="object-contain"

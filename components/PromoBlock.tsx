@@ -19,7 +19,7 @@ const PromoBlock = ({
   altText = "Premium print mockups",
   badge = "Trade Exclusive",
   title = "Built for high-volume print partners",
-  description = "From offset to digital, embellishments to packaging, Mamaji empowers print resellers with enterprise-grade infrastructure and hands-on support.",
+  description = "From offset to digital, embellishments to packaging, Rehmat Graphics empowers print resellers with enterprise-grade infrastructure and hands-on support.",
   stats = [
     { label: "Certified Agents", value: "850+" },
     { label: "Daily Shipments", value: "4.5k" },

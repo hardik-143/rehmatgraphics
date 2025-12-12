@@ -13,7 +13,7 @@ const sanitizePhoneHref = (phone: string) => phone.replace(/[^+\d]/g, "");
 const TopBar = ({
   workingHours = "Mon - Sat: 9:00 AM - 8:00 PM",
   lunchBreak = "Lunch: 1:00 PM - 2:00 PM",
-  email = "support@mamajiprint.com",
+  email = "support@rehmatgraphics.com",
   phone = "+91 98765 43210",
 }: TopBarProps) => {
   const phoneHref = `tel:${sanitizePhoneHref(phone)}`;

@@ -26,7 +26,7 @@ export interface FooterProps {
 const sanitizePhoneHref = (phone: string) => phone.replace(/[^+\d]/g, "");
 
 const Footer = ({
-  companyName = "Mamaji Printing Services Pvt. Ltd.",
+  companyName = "Rehmat Graphics Printing Services Pvt. Ltd.",
   description = "Professional trade printing solutions for agencies, print brokers, and creative studios across India.",
   quickLinks = [
     { label: "Login", href: "#login" },
@@ -36,12 +36,12 @@ const Footer = ({
     { label: "Video Tutorials", href: "#videos" },
   ],
   addressLines = [
-    "Plot 45, Print Park Industrial Estate",
-    "Ring Road, Surat, Gujarat 395003",
-    "India",
+    "Flat No. 302, Rehmat Graphics Building,",
+    "MG Road, Near Central Mall,",
+    "Ahmedabad, Gujarat - 380009, India",
   ],
-  phone = "+91 98765 43210",
-  email = "support@mamajiprint.com",
+  phone = "+91 98989 98989",
+  email = "support@rehmatgraphics.com",
   socialLinks = [
     { label: "Facebook", href: "https://facebook.com" },
     { label: "Instagram", href: "https://instagram.com" },
@@ -84,7 +84,7 @@ const Footer = ({
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="transition duration-200 hover:text-brand-accent"
+                  className="transition duration-200 hover:text-brand-accent text-white"
                 >
                   {item.label}
                 </Link>

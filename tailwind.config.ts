@@ -142,7 +142,7 @@ const colors = {
   "brand-accent": "#38bdf8",
 };
 
-const config: Config = {
+export default {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -162,6 +162,4 @@ const config: Config = {
     },
   },
   plugins: [],
-};
-
-export default config;
+} as Config;

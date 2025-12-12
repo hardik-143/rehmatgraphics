@@ -22,9 +22,9 @@ const defaultFaqs: FAQItem[] = [
   },
   {
     id: "agent-access",
-    question: "Only registered agents can order online with MMamaji.",
+    question: "Only registered agents can order online with Rehmat Graphics.",
     answer:
-      "Mamaji operates strictly as a trade printer. To protect reseller relationships, only verified partners with approved accounts can access pricing and ordering tools.",
+      "Rehmat Graphics operates strictly as a trade printer. To protect reseller relationships, only verified partners with approved accounts can access pricing and ordering tools.",
   },
   {
     id: "register-agent",

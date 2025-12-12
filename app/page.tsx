@@ -10,7 +10,7 @@ import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Mamaji Trade Printing | Professional Printing Services",
+  title: "Rehmat Graphics | Professional Printing Services",
   description:
     "Trusted trade printing partner offering visiting cards, packaging, catalogues, and more with nationwide delivery and agent-only pricing.",
 };
