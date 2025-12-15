@@ -19,7 +19,7 @@ const AccordionContext = createContext<AccordionContextValue | undefined>(
 );
 
 export interface AccordionProps extends PropsWithChildren {
-  defaultId?: string;
+  defaultId?: string | null;
   className?: string;
   heading?: ReactNode;
 }

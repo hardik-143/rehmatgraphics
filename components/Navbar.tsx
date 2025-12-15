@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, X } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { clearCredentials } from "@/store/authSlice";
 
 export interface NavLink {
   label: string;
@@ -29,13 +31,43 @@ const defaultLinks: NavLink[] = [
 const Navbar = ({
   logoSrc = "/images/logo-placeholder.svg",
   links = defaultLinks,
-  loginHref = "#login",
-  registerHref = "#register",
+  loginHref = "/login",
+  registerHref = "/register",
 }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
+  const toggleProfileMenu = () => setIsProfileOpen((previous) => !previous);
+  const closeProfileMenu = () => setIsProfileOpen(false);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+
+    dispatch(clearCredentials());
+    closeMenu();
+    closeProfileMenu();
+  };
+
+  const displayName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email
+    : "";
+  const initials = displayName
+    ? displayName
+        .split(" ")
+        .map((part) => part.trim()[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : (user?.email?.[0]?.toUpperCase() ?? "");
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-white/70 shadow-sm backdrop-blur-lg">
@@ -71,18 +103,63 @@ const Navbar = ({
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              href={loginHref}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
-            >
-              Login
-            </Link>
-            <Link
-              href={registerHref}
-              className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-5 py-2 text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
-            >
-              Register
-            </Link>
+            {user ? (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={toggleProfileMenu}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/10 text-sm font-bold uppercase text-brand-primary">
+                    {initials}
+                  </span>
+                  <span className="max-w-[9rem] truncate text-left">
+                    {displayName}
+                  </span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      isProfileOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                    aria-hidden
+                  />
+                </button>
+                {isProfileOpen ? (
+                  <div className="absolute right-0 z-50 mt-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
+                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">
+                      <p className="font-semibold text-slate-900">
+                        {displayName}
+                      </p>
+                      <p className="truncate text-xs text-slate-500">
+                        {user.email}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
+                    >
+                      <LogOut className="h-4 w-4" aria-hidden />
+                      Logout
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <>
+                <Link
+                  href={loginHref}
+                  className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                >
+                  Login
+                </Link>
+                <Link
+                  href={registerHref}
+                  className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-5 py-2 text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -116,20 +193,46 @@ const Navbar = ({
             ))}
           </nav>
           <div className="mt-6 flex flex-col gap-2">
-            <Link
-              href={loginHref}
-              className="rounded-full border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
-              onClick={closeMenu}
-            >
-              Login
-            </Link>
-            <Link
-              href={registerHref}
-              className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-4 py-2 text-center text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
-              onClick={closeMenu}
-            >
-              Register
-            </Link>
+            {user ? (
+              <>
+                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/10 text-base font-bold uppercase text-brand-primary">
+                    {initials}
+                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-slate-900">
+                      {displayName}
+                    </span>
+                    <span className="text-xs text-slate-500">{user.email}</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center justify-center gap-2 rounded-full border border-brand-primary/40 px-4 py-2 text-sm font-semibold text-brand-primary transition duration-200 hover:bg-brand-primary/10"
+                >
+                  <LogOut className="h-4 w-4" aria-hidden />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href={loginHref}
+                  className="rounded-full border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                  onClick={closeMenu}
+                >
+                  Login
+                </Link>
+                <Link
+                  href={registerHref}
+                  className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-4 py-2 text-center text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
+                  onClick={closeMenu}
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       ) : null}

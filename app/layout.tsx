@@ -5,6 +5,7 @@ import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { DisableDraftMode } from "@/app/components/DisableDraftMode";
+import StoreProvider from "@/store/StoreProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -57,15 +58,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const draft = await draftMode();
+
   return (
     <html lang="en">
       <body
         // ${geistSans.variable} ${geistMono.variable}
         className={` ${montserrat.variable} antialiased font-sans-serif`}
       >
-        {children}
+        <StoreProvider>{children}</StoreProvider>
         <SanityLive />
-        {(await draftMode()).isEnabled && (
+        {draft.isEnabled && (
           <>
             {/* Enable Visual Editing, only to be rendered when Draft Mode is enabled */}
             <DisableDraftMode />
