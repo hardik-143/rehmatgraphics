@@ -68,6 +68,7 @@ const Navbar = ({
         .join("")
         .toUpperCase()
     : (user?.email?.[0]?.toUpperCase() ?? "");
+  const isAdmin = Boolean(user?.is_admin);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-white/70 shadow-sm backdrop-blur-lg">
@@ -133,6 +134,15 @@ const Navbar = ({
                         {user.email}
                       </p>
                     </div>
+                    {isAdmin ? (
+                      <Link
+                        href="/admin"
+                        className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
+                        onClick={closeProfileMenu}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    ) : null}
                     <button
                       type="button"
                       onClick={handleLogout}
@@ -206,6 +216,15 @@ const Navbar = ({
                     <span className="text-xs text-slate-500">{user.email}</span>
                   </div>
                 </div>
+                {isAdmin ? (
+                  <Link
+                    href="/admin"
+                    className="flex items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                    onClick={closeMenu}
+                  >
+                    Admin Dashboard
+                  </Link>
+                ) : null}
                 <button
                   type="button"
                   onClick={handleLogout}

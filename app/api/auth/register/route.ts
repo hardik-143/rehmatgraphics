@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { z } from "zod";
-import { sign } from "jsonwebtoken";
 import { createUser, findUserByEmail } from "@/lib/users";
-import { JWT_EXPIRES_IN, JWT_SECRET, SESSION_COOKIE_NAME } from "@/app/env";
 
 const registerSchema = z.object({
   firstName: z
@@ -28,6 +26,7 @@ const registerSchema = z.object({
 export const POST = async (request: NextRequest) => {
   try {
     const payload = await request.json();
+    console.log("Register payload:", payload);
     const { firstName, lastName, email, password } =
       registerSchema.parse(payload);
 
@@ -38,7 +37,7 @@ export const POST = async (request: NextRequest) => {
         { status: 409 }
       );
     }
-
+    // Password123#@
     const passwordHash = await hash(password, 12);
 
     const user = await createUser({
@@ -47,39 +46,14 @@ export const POST = async (request: NextRequest) => {
       email,
       passwordHash,
     });
-
-    const token = sign(
+    return NextResponse.json(
       {
-        sub: user._id.toString(),
-        email: user.email,
-      },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
-    );
-
-    const response = NextResponse.json(
-      {
-        user: {
-          id: user._id.toString(),
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        },
+        pendingApproval: true,
+        message:
+          "Registration received. An administrator will approve your account soon.",
       },
       { status: 201 }
     );
-
-    response.cookies.set({
-      name: SESSION_COOKIE_NAME,
-      value: token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    return response;
   } catch (error) {
     if (error instanceof z.ZodError) {
       const issues = error.issues.map((issue) => issue.message);

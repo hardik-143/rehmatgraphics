@@ -36,6 +36,16 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
+    if (!user.is_approved) {
+      return NextResponse.json(
+        {
+          error:
+            "Your account is awaiting approval. Please contact the administrator.",
+        },
+        { status: 403 }
+      );
+    }
+
     const otpCode = String(randomInt(100000, 1000000));
     const otpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
     const otpCodeHash = await hash(otpCode, 10);

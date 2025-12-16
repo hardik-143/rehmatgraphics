@@ -50,12 +50,12 @@ const RegisterForm = () => {
         return;
       }
 
-      const firstName = data?.user?.firstName as string | undefined;
       setStatus({
         type: "success",
-        message: firstName
-          ? `Welcome aboard, ${firstName}. Your account is ready.`
-          : "Registration successful. You're signed in.",
+        message:
+          typeof data?.message === "string"
+            ? data.message
+            : "Registration received. We'll email you once an administrator approves your account.",
       });
       setFormValues(initialState);
     } catch (error) {

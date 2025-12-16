@@ -5,6 +5,8 @@ export interface AuthUser {
   email: string;
   firstName?: string;
   lastName?: string;
+  is_admin?: boolean;
+  is_approved?: boolean;
 }
 
 interface AuthState {

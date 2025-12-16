@@ -28,6 +28,17 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
+    if (!user.is_approved) {
+      await clearUserOtp(user._id);
+      return NextResponse.json(
+        {
+          error:
+            "Your account is awaiting approval. Please contact the administrator.",
+        },
+        { status: 403 }
+      );
+    }
+
     if ((user.otpAttemptCount ?? 0) >= MAX_OTP_ATTEMPTS) {
       await clearUserOtp(user._id);
       return NextResponse.json(
@@ -89,6 +100,8 @@ export const POST = async (request: NextRequest) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          is_admin: user.is_admin,
+          is_approved: user.is_approved,
         },
       },
       { status: 200 }

@@ -7,6 +7,8 @@ interface CreateUserInput {
   lastName: string;
   email: string;
   passwordHash: string;
+  is_admin?: boolean;
+  is_approved?: boolean;
 }
 
 export const findUserByEmail = async (email: string) => {
@@ -21,6 +23,8 @@ export const createUser = async (
   const user = await User.create({
     ...input,
     email: input.email.toLowerCase(),
+    is_admin: input.is_admin ?? false,
+    is_approved: input.is_approved ?? false,
   });
   return user;
 };

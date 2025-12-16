@@ -5,6 +5,8 @@ export interface UserDocument extends Document {
   lastName: string;
   email: string;
   passwordHash: string;
+  is_admin: boolean;
+  is_approved: boolean;
   otpCodeHash?: string;
   otpExpiresAt?: Date;
   otpAttemptCount?: number;
@@ -37,6 +39,16 @@ const UserSchema = new Schema<UserDocument>(
     passwordHash: {
       type: String,
       required: true,
+    },
+    is_admin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    is_approved: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
     otpCodeHash: {
       type: String,
