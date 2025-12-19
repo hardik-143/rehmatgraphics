@@ -36,7 +36,6 @@ const fetchAdminData = async () => {
         line2: user.address?.line2 ?? "",
         city: user.address?.city ?? "",
         state: user.address?.state ?? "",
-        country: user.address?.country ?? "",
       },
       visitingCardAssetId: user.visitingCardAssetId ?? null,
       visitingCardAssetUrl: user.visitingCardAssetUrl ?? null,

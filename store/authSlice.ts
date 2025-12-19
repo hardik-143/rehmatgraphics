@@ -5,7 +5,6 @@ export interface AuthUserAddress {
   line2?: string;
   city?: string;
   state?: string;
-  country?: string;
 }
 
 export interface AuthUser {

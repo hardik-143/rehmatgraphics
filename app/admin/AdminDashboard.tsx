@@ -15,7 +15,6 @@ interface AdminUserAddress {
   line2?: string;
   city: string;
   state: string;
-  country: string;
 }
 
 interface AdminUserRow {
@@ -265,7 +264,6 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
                       const locationLine = [
                         user.address?.city,
                         user.address?.state,
-                        user.address?.country,
                       ]
                         .filter(Boolean)
                         .join(", ");

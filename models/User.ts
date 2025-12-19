@@ -5,7 +5,6 @@ export interface UserAddress {
   line2?: string;
   city: string;
   state: string;
-  country: string;
 }
 
 export interface UserDocument extends Document {
@@ -86,12 +85,6 @@ const UserSchema = new Schema<UserDocument>(
         minlength: 2,
       },
       state: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 2,
-      },
-      country: {
         type: String,
         required: true,
         trim: true,

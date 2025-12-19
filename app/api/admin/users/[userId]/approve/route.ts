@@ -56,7 +56,6 @@ export const POST = async (
         line2: updatedUser.address?.line2 ?? "",
         city: updatedUser.address?.city ?? "",
         state: updatedUser.address?.state ?? "",
-        country: updatedUser.address?.country ?? "",
       },
       visitingCardAssetId: updatedUser.visitingCardAssetId ?? null,
       visitingCardAssetUrl: updatedUser.visitingCardAssetUrl ?? null,

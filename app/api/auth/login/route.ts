@@ -46,18 +46,25 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    const otpCode = String(randomInt(100000, 1000000));
+    const isDev = process.env.NODE_ENV !== "production";
+    const otpCode = isDev ? "000000" : String(randomInt(100000, 1000000));
     const otpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
     const otpCodeHash = await hash(otpCode, 10);
 
     await setUserOtp(user._id, otpCodeHash, otpExpiresAt);
-    await sendOtpEmail(user.email, otpCode, OTP_EXPIRY_MINUTES);
+
+    if (!isDev) {
+      await sendOtpEmail(user.email, otpCode, OTP_EXPIRY_MINUTES);
+    }
 
     return NextResponse.json(
       {
         otpRequired: true,
         userId: user._id.toString(),
-        message: "We emailed you a one-time code to finish signing in.",
+        message: isDev
+          ? "Dev mode: Use 000000 as your OTP code."
+          : "We emailed you a one-time code to finish signing in.",
+        isDev,
       },
       { status: 200 }
     );

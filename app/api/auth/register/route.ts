@@ -50,10 +50,6 @@ const registerSchema = z.object({
     .string()
     .trim()
     .min(2, "State must be at least 2 characters."),
-  country: z
-    .string()
-    .trim()
-    .min(2, "Country must be at least 2 characters."),
 });
 
 export const POST = async (request: NextRequest) => {
@@ -76,7 +72,6 @@ export const POST = async (request: NextRequest) => {
       addressLine2: stringField("addressLine2"),
       city: stringField("city"),
       state: stringField("state"),
-      country: stringField("country"),
     });
 
     const visitingCard = formData.get("visitingCard");
@@ -114,7 +109,6 @@ export const POST = async (request: NextRequest) => {
       addressLine2,
       city,
       state,
-      country,
     } = payload;
 
     const existing = await findUserByEmail(email);
@@ -163,7 +157,6 @@ export const POST = async (request: NextRequest) => {
         line2: addressLine2 || undefined,
         city,
         state,
-        country,
       },
       visitingCardAssetId,
       visitingCardAssetUrl,
