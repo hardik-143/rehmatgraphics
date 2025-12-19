@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { z } from "zod";
 import { createUser, findUserByEmail } from "@/lib/users";
+import { client } from "@/sanity/lib/client";
 
 const registerSchema = z.object({
   firstName: z
@@ -21,14 +22,100 @@ const registerSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters.")
     .max(72, "Password must be at most 72 characters."),
+  phoneNumber: z
+    .string()
+    .trim()
+    .min(7, "Phone number must be at least 7 characters.")
+    .max(20, "Phone number must be at most 20 characters.")
+    .regex(/^[0-9+\-()\s]*$/u, "Enter a valid phone number."),
+  firmName: z
+    .string()
+    .trim()
+    .min(2, "Firm name must be at least 2 characters."),
+  addressLine1: z
+    .string()
+    .trim()
+    .min(3, "Address line 1 must be at least 3 characters."),
+  addressLine2: z
+    .string()
+    .trim()
+    .max(120, "Address line 2 must be at most 120 characters.")
+    .optional()
+    .or(z.literal("")),
+  city: z
+    .string()
+    .trim()
+    .min(2, "City must be at least 2 characters."),
+  state: z
+    .string()
+    .trim()
+    .min(2, "State must be at least 2 characters."),
+  country: z
+    .string()
+    .trim()
+    .min(2, "Country must be at least 2 characters."),
 });
 
 export const POST = async (request: NextRequest) => {
   try {
-    const payload = await request.json();
-    console.log("Register payload:", payload);
-    const { firstName, lastName, email, password } =
-      registerSchema.parse(payload);
+    const formData = await request.formData();
+
+    const stringField = (key: string) => {
+      const value = formData.get(key);
+      return typeof value === "string" ? value : undefined;
+    };
+
+    const payload = registerSchema.parse({
+      firstName: stringField("firstName"),
+      lastName: stringField("lastName"),
+      email: stringField("email"),
+      password: stringField("password"),
+      phoneNumber: stringField("phoneNumber"),
+      firmName: stringField("firmName"),
+      addressLine1: stringField("addressLine1"),
+      addressLine2: stringField("addressLine2"),
+      city: stringField("city"),
+      state: stringField("state"),
+      country: stringField("country"),
+    });
+
+    const visitingCard = formData.get("visitingCard");
+
+    if (!(visitingCard instanceof File) || visitingCard.size === 0) {
+      return NextResponse.json(
+        { error: "Please upload a visiting card image." },
+        { status: 422 }
+      );
+    }
+
+    if (!visitingCard.type?.startsWith("image/")) {
+      return NextResponse.json(
+        { error: "Visiting card must be an image file." },
+        { status: 422 }
+      );
+    }
+
+    const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+    if (visitingCard.size > MAX_FILE_SIZE_BYTES) {
+      return NextResponse.json(
+        { error: "Visiting card must be 5MB or smaller." },
+        { status: 422 }
+      );
+    }
+
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      firmName,
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      country,
+    } = payload;
 
     const existing = await findUserByEmail(email);
     if (existing) {
@@ -37,14 +124,50 @@ export const POST = async (request: NextRequest) => {
         { status: 409 }
       );
     }
-    // Password123#@
+
     const passwordHash = await hash(password, 12);
 
-    const user = await createUser({
+    const visitingCardArrayBuffer = await visitingCard.arrayBuffer();
+    const visitingCardBuffer = Buffer.from(visitingCardArrayBuffer);
+
+    let visitingCardAssetId: string | undefined;
+    let visitingCardAssetUrl: string | undefined;
+    let visitingCardOriginalFilename: string | undefined;
+
+    try {
+      const asset = await client.assets.upload("image", visitingCardBuffer, {
+        filename: visitingCard.name ?? "visiting-card.jpg",
+        contentType: visitingCard.type,
+      });
+
+      visitingCardAssetId = asset?._id;
+      visitingCardAssetUrl = asset?.url;
+      visitingCardOriginalFilename = asset?.originalFilename;
+    } catch (assetError) {
+      console.error("Visiting card upload failed:", assetError);
+      return NextResponse.json(
+        { error: "We could not store the visiting card. Please try again." },
+        { status: 500 }
+      );
+    }
+
+    await createUser({
       firstName,
       lastName,
       email,
       passwordHash,
+      phoneNumber,
+      firmName,
+      address: {
+        line1: addressLine1,
+        line2: addressLine2 || undefined,
+        city,
+        state,
+        country,
+      },
+      visitingCardAssetId,
+      visitingCardAssetUrl,
+      visitingCardOriginalFilename,
     });
     return NextResponse.json(
       {

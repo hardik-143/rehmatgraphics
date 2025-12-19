@@ -1,5 +1,5 @@
 import { connectToDatabase } from "@/lib/mongoose";
-import { User, type UserDocument } from "@/models/User";
+import { User, type UserDocument, type UserAddress } from "@/models/User";
 import { Types } from "mongoose";
 
 interface CreateUserInput {
@@ -7,6 +7,12 @@ interface CreateUserInput {
   lastName: string;
   email: string;
   passwordHash: string;
+  phoneNumber: string;
+  firmName: string;
+  address: UserAddress;
+  visitingCardAssetId?: string;
+  visitingCardAssetUrl?: string;
+  visitingCardOriginalFilename?: string;
   is_admin?: boolean;
   is_approved?: boolean;
 }

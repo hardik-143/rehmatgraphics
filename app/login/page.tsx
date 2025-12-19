@@ -9,7 +9,7 @@ import FAQSection from "@/components/FAQSection";
 export const metadata: Metadata = {
   title: "Login | Rehmat Graphics",
   description:
-    "Sign in to your Mamaji trade printing dashboard to manage jobs, upload artwork, and track deliveries.",
+    "Sign in to your Rehmat Graphics trade printing dashboard to manage jobs, upload artwork, and track deliveries.",
 };
 
 const LoginPage = () => {

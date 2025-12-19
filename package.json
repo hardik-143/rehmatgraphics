@@ -33,6 +33,7 @@
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
     "sanity": "^4.21.1",
+    "sanity-plugin-media": "^4.1.1",
     "sanity-plugin-seofields": "^1.0.9",
     "sass": "^1.96.0",
     "styled-components": "^6.1.19",

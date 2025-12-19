@@ -1,10 +1,24 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
+export interface AuthUserAddress {
+  line1?: string;
+  line2?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
 export interface AuthUser {
   id: string;
   email: string;
   firstName?: string;
   lastName?: string;
+  phoneNumber?: string;
+  firmName?: string;
+  address?: AuthUserAddress;
+  visitingCardAssetId?: string | null;
+  visitingCardAssetUrl?: string | null;
+  visitingCardOriginalFilename?: string | null;
   is_admin?: boolean;
   is_approved?: boolean;
 }

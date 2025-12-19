@@ -10,11 +10,25 @@ interface AdminStats {
   pendingUsers: number;
 }
 
+interface AdminUserAddress {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  country: string;
+}
+
 interface AdminUserRow {
   id: string;
   firstName?: string;
   lastName?: string;
   email: string;
+  phoneNumber: string;
+  firmName: string;
+  address: AdminUserAddress;
+  visitingCardAssetId: string | null;
+  visitingCardAssetUrl: string | null;
+  visitingCardOriginalFilename: string | null;
   is_admin: boolean;
   is_approved: boolean;
   createdAt: string;
@@ -126,7 +140,7 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
         <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white/90 px-6 py-8 shadow-sm lg:flex">
           <div className="mb-10">
             <Link href="/" className="text-lg font-bold tracking-tight text-slate-900">
-              Mamaji Admin
+              Rehmat Graphics Admin
             </Link>
             <p className="mt-1 text-xs text-slate-500">
               Signed in as {currentAdmin.firstName ?? currentAdmin.email}
@@ -224,7 +238,13 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
                         Name
                       </th>
                       <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
-                        Email
+                        Firm & Contact
+                      </th>
+                      <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                        Location
+                      </th>
+                      <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                        Visiting Card
                       </th>
                       <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
                         Status
@@ -242,14 +262,55 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
                         .join(" ")
                         .trim();
                       const joined = new Date(user.createdAt).toLocaleDateString();
+                      const locationLine = [
+                        user.address?.city,
+                        user.address?.state,
+                        user.address?.country,
+                      ]
+                        .filter(Boolean)
+                        .join(", ");
+                      const streetLine = [
+                        user.address?.line1,
+                        user.address?.line2,
+                      ]
+                        .filter(Boolean)
+                        .join(", ");
 
                       return (
                         <tr key={user.id} className="hover:bg-slate-50/70">
                           <td className="px-6 py-4 text-slate-900">
-                            {displayName || "—"}
+                            <p className="font-medium">
+                              {displayName || "—"}
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              {user.firmName || "—"}
+                            </p>
                           </td>
                           <td className="px-6 py-4 text-slate-600">
-                            {user.email}
+                            <p>{user.email}</p>
+                            <p className="text-xs text-slate-500">
+                              {user.phoneNumber || "—"}
+                            </p>
+                          </td>
+                          <td className="px-6 py-4 text-slate-600">
+                            <p>{locationLine || "—"}</p>
+                            <p className="text-xs text-slate-500">
+                              {streetLine || ""}
+                            </p>
+                          </td>
+                          <td className="px-6 py-4 text-slate-600">
+                            {user.visitingCardAssetUrl ? (
+                              <a
+                                href={user.visitingCardAssetUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-sm font-semibold text-brand-primary transition hover:text-brand-secondary"
+                              >
+                                View Card
+                              </a>
+                            ) : (
+                              <span className="text-xs text-slate-400">Not uploaded</span>
+                            )}
                           </td>
                           <td className="px-6 py-4">
                             {renderStatusBadge(user)}

@@ -20,7 +20,7 @@ export const GET = async (request: NextRequest) => {
     User.find({})
       .sort({ createdAt: -1 })
       .select(
-        "firstName lastName email is_admin is_approved createdAt updatedAt"
+        "firstName lastName email phoneNumber firmName address visitingCardAssetId visitingCardAssetUrl visitingCardOriginalFilename is_admin is_approved createdAt updatedAt"
       )
       .lean(),
     User.countDocuments().exec(),
@@ -36,6 +36,18 @@ export const GET = async (request: NextRequest) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      phoneNumber: user.phoneNumber,
+      firmName: user.firmName,
+      address: {
+        line1: user.address?.line1 ?? "",
+        line2: user.address?.line2 ?? "",
+        city: user.address?.city ?? "",
+        state: user.address?.state ?? "",
+        country: user.address?.country ?? "",
+      },
+      visitingCardAssetId: user.visitingCardAssetId ?? null,
+      visitingCardAssetUrl: user.visitingCardAssetUrl ?? null,
+      visitingCardOriginalFilename: user.visitingCardOriginalFilename ?? null,
       is_admin: user.is_admin,
       is_approved: user.is_approved,
       createdAt: new Date(user.createdAt).toISOString(),

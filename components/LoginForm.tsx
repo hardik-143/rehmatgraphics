@@ -200,7 +200,7 @@ const LoginForm = () => {
                   name="email"
                   value={formValues.email}
                   onChange={handleChange("email")}
-                  placeholder="agent@mamajiprint.com"
+                  placeholder="agent@rehmatgraphics.com"
                   required
                   className="w-full border-none bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
                 />

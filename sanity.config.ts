@@ -4,6 +4,7 @@ import { visionTool } from "@sanity/vision";
 import { presentationTool } from "sanity/presentation";
 import { schemaTypes } from "./sanity/schemas";
 import seofields from "sanity-plugin-seofields";
+import { media } from "sanity-plugin-media";
 import { resolve } from "./sanity/presentation/resolve";
 export default defineConfig({
   name: "default",
@@ -14,6 +15,7 @@ export default defineConfig({
   plugins: [
     structureTool(),
     visionTool(),
+    media(),
     presentationTool({
       resolve,
       previewUrl: {

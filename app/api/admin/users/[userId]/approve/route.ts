@@ -35,7 +35,7 @@ export const POST = async (
     { new: true }
   )
     .select(
-      "firstName lastName email is_admin is_approved createdAt updatedAt"
+      "firstName lastName email phoneNumber firmName address visitingCardAssetId visitingCardAssetUrl visitingCardOriginalFilename is_admin is_approved createdAt updatedAt"
     )
     .lean();
 
@@ -49,6 +49,19 @@ export const POST = async (
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
       email: updatedUser.email,
+      phoneNumber: updatedUser.phoneNumber,
+      firmName: updatedUser.firmName,
+      address: {
+        line1: updatedUser.address?.line1 ?? "",
+        line2: updatedUser.address?.line2 ?? "",
+        city: updatedUser.address?.city ?? "",
+        state: updatedUser.address?.state ?? "",
+        country: updatedUser.address?.country ?? "",
+      },
+      visitingCardAssetId: updatedUser.visitingCardAssetId ?? null,
+      visitingCardAssetUrl: updatedUser.visitingCardAssetUrl ?? null,
+      visitingCardOriginalFilename:
+        updatedUser.visitingCardOriginalFilename ?? null,
       is_admin: updatedUser.is_admin,
       is_approved: updatedUser.is_approved,
       createdAt: new Date(updatedUser.createdAt).toISOString(),

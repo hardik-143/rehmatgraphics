@@ -9,7 +9,7 @@ import PromoBlock from "@/components/PromoBlock";
 export const metadata: Metadata = {
   title: "Register | Rehmat Graphics",
   description:
-    "Create your Mamaji trade printing account to unlock live pricing, nationwide delivery, and secure file uploads.",
+    "Create your Rehmat Graphics trade printing account to unlock live pricing, nationwide delivery, and secure file uploads.",
 };
 
 const RegisterPage = () => {

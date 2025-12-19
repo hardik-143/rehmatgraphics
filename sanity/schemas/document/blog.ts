@@ -18,52 +18,52 @@ const blog = defineType({
       },
       group: "content",
     }),
-    defineField({
-      name: "title",
-      title: "Title",
-      type: "string",
-      group: "content",
-    }),
-    defineField({
-      name: "bannerImage",
-      title: "Banner Image",
-      type: "imageWithAlt",
-      group: "content",
-    }),
-    defineField({
-      name: "description",
-      title: "Description",
-      type: "text",
-      group: "content",
-    }),
-    defineField({
-      name: "saveAsDraft",
-      title: "Save as Draft",
-      type: "boolean",
-      description:
-        "If checked, the blog will not be published and will remain in draft mode.",
-      initialValue: false,
-      group: "content",
-    }),
-    defineField({
-      name: "publishedAt",
-      title: "Published At",
-      type: "datetime",
-      description: "The date and time when the blog was published.",
-      group: "content",
-    }),
-    defineField({
-      name: "content",
-      title: "Content",
-      type: "blogContent",
-      group: "content",
-    }),
-    defineField({
-      name: "seo",
-      title: "SEO Settings",
-      type: "seoFields",
-      group: "seo", // Optional: group in a tab
-    }),
+    // defineField({
+    //   name: "title",
+    //   title: "Title",
+    //   type: "string",
+    //   group: "content",
+    // }),
+    // defineField({
+    //   name: "bannerImage",
+    //   title: "Banner Image",
+    //   type: "imageWithAlt",
+    //   group: "content",
+    // }),
+    // defineField({
+    //   name: "description",
+    //   title: "Description",
+    //   type: "text",
+    //   group: "content",
+    // }),
+    // defineField({
+    //   name: "saveAsDraft",
+    //   title: "Save as Draft",
+    //   type: "boolean",
+    //   description:
+    //     "If checked, the blog will not be published and will remain in draft mode.",
+    //   initialValue: false,
+    //   group: "content",
+    // }),
+    // defineField({
+    //   name: "publishedAt",
+    //   title: "Published At",
+    //   type: "datetime",
+    //   description: "The date and time when the blog was published.",
+    //   group: "content",
+    // }),
+    // defineField({
+    //   name: "content",
+    //   title: "Content",
+    //   type: "blogContent",
+    //   group: "content",
+    // }),
+    // defineField({
+    //   name: "seo",
+    //   title: "SEO Settings",
+    //   type: "seoFields",
+    //   group: "seo", // Optional: group in a tab
+    // }),
   ],
 });
 
