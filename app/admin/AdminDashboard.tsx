@@ -14,6 +14,7 @@ import {
   ChevronRight,
   RefreshCw,
 } from "lucide-react";
+import AdminLayout from "@/app/admin/components/AdminLayout";
 
 interface AdminStats {
   totalUsers: number;
@@ -92,7 +93,7 @@ interface AdminDashboardProps {
 type TabType = "users" | "activity";
 
 const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<TabType>("users");
+  const [activeTab, _setActiveTab] = useState<TabType>("users");
   const [metrics, setMetrics] = useState(stats);
   const [rows, setRows] = useState(initialUsers);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -230,62 +231,10 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="flex min-h-screen">
-        <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white/90 px-6 py-8 shadow-sm lg:flex">
-          <div className="mb-10">
-            <Link href="/" className="text-lg font-bold tracking-tight text-slate-900">
-              Rehmat Graphics Admin
-            </Link>
-            <p className="mt-1 text-xs text-slate-500">
-              Signed in as {currentAdmin.firstName ?? currentAdmin.email}
-            </p>
-          </div>
-          <nav className="space-y-1 text-sm font-medium text-slate-600">
-            <button
-              type="button"
-              onClick={() => setActiveTab("users")}
-              className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-left transition ${
-                activeTab === "users"
-                  ? "bg-slate-900/5 text-slate-900"
-                  : "text-slate-500 hover:bg-slate-50"
-              }`}
-            >
-              <Users className="h-4 w-4" />
-              Users
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("activity")}
-              className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-left transition ${
-                activeTab === "activity"
-                  ? "bg-slate-900/5 text-slate-900"
-                  : "text-slate-500 hover:bg-slate-50"
-              }`}
-            >
-              <Activity className="h-4 w-4" />
-              Activity Logs
-            </button>
-          </nav>
-        </aside>
-
-        <main className="flex-1">
-          <header className="border-b border-slate-200 bg-white/80 px-6 py-5 shadow-sm backdrop-blur">
-            <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h1 className="text-2xl font-semibold text-slate-900">Admin Dashboard</h1>
-                <p className="text-sm text-slate-500">
-                  Manage account approvals and review platform activity.
-                </p>
-              </div>
-              <div className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-                <Shield className="h-4 w-4" aria-hidden />
-                Admin Access Enabled
-              </div>
-            </div>
-          </header>
-
-          <section className="space-y-6 px-6 py-8">
+    <AdminLayout
+      currentAdmin={{ email: currentAdmin.email, firstName: currentAdmin.firstName }}
+      title="Admin Dashboard"
+    >
             {/* Stats Grid - always visible */}
             {activeTab === "users" && (
               <div className="grid gap-4 md:grid-cols-3">
@@ -438,7 +387,12 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
                         <tr key={user.id} className="hover:bg-slate-50/70">
                           <td className="px-6 py-4 text-slate-900">
                             <p className="font-medium">
-                              {displayName || "—"}
+                              <Link
+                                href={`/admin/users/${user.id}`}
+                                className="text-brand-primary hover:text-brand-secondary"
+                              >
+                                {displayName || "—"}
+                              </Link>
                             </p>
                             <p className="text-xs text-slate-500">
                               {user.firmName || "—"}
@@ -653,10 +607,7 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
                 )}
               </div>
             )}
-          </section>
-        </main>
-      </div>
-    </div>
+    </AdminLayout>
   );
 };
 
