@@ -11,8 +11,10 @@ const updateSchema = z.object({
 
 export const PATCH = async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
+      const { id } = await params;
+
   const adminUser = await authenticateRequest(request);
   if (!adminUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!adminUser.is_admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -20,7 +22,7 @@ export const PATCH = async (
   try {
     const payload = await request.json();
     const body = updateSchema.parse(payload);
-    const updated = await updateProduct(params.id, body);
+    const updated = await updateProduct(id, body);
     if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json({
       id: updated._id.toString(),
@@ -41,14 +43,15 @@ export const PATCH = async (
 
 export const DELETE = async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
+      const { id } = await params;
   const adminUser = await authenticateRequest(request);
   if (!adminUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!adminUser.is_admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
-    const deleted = await deleteProduct(params.id);
+    const deleted = await deleteProduct(id);
     if (!deleted) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json({ success: true });
   } catch (error) {
