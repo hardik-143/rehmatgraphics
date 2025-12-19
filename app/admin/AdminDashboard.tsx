@@ -1,13 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { CheckCircle2, Loader2, Shield, Users, Clock, ShieldAlert } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  Shield,
+  Users,
+  Clock,
+  ShieldAlert,
+  Activity,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCw,
+} from "lucide-react";
 
 interface AdminStats {
   totalUsers: number;
   approvedUsers: number;
   pendingUsers: number;
+}
+
+interface ActivityLog {
+  id: string;
+  userId: string | null;
+  userEmail: string | null;
+  userName: string | null;
+  action: string;
+  actionLabel: string;
+  details: string | null;
+  ipAddress: string | null;
+  createdAt: string | null;
+}
+
+interface ActivityStats {
+  totalActivities: number;
+  todayActivities: number;
+  activityBreakdown: Array<{ action: string; count: number }>;
+}
+
+interface ActivityType {
+  key: string;
+  value: string;
+  label: string;
+}
+
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 interface AdminUserAddress {
@@ -47,7 +89,10 @@ interface AdminDashboardProps {
   currentAdmin: CurrentAdmin;
 }
 
+type TabType = "users" | "activity";
+
 const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardProps) => {
+  const [activeTab, setActiveTab] = useState<TabType>("users");
   const [metrics, setMetrics] = useState(stats);
   const [rows, setRows] = useState(initialUsers);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -55,6 +100,57 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
     | { type: "success" | "error"; message: string }
     | null
   >(null);
+
+  // Activity log state
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
+  const [activityStats, setActivityStats] = useState<ActivityStats | null>(null);
+  const [activityTypes, setActivityTypes] = useState<ActivityType[]>([]);
+  const [activityPagination, setActivityPagination] = useState<Pagination | null>(null);
+  const [activityFilter, setActivityFilter] = useState<string>("");
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [activityError, setActivityError] = useState<string | null>(null);
+
+  const fetchActivityLogs = useCallback(async (page = 1, action?: string) => {
+    setActivityLoading(true);
+    setActivityError(null);
+
+    try {
+      const params = new URLSearchParams({ page: String(page), limit: "20" });
+      if (action) params.set("action", action);
+
+      const response = await fetch(`/api/admin/activity-logs?${params}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch activity logs");
+      }
+
+      setActivityLogs(data.logs);
+      setActivityStats(data.stats);
+      setActivityTypes(data.activityTypes);
+      setActivityPagination(data.pagination);
+    } catch (error) {
+      console.error("fetchActivityLogs error:", error);
+      setActivityError(error instanceof Error ? error.message : "Failed to load activity logs");
+    } finally {
+      setActivityLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "activity" && activityLogs.length === 0) {
+      fetchActivityLogs();
+    }
+  }, [activeTab, activityLogs.length, fetchActivityLogs]);
+
+  const handleActivityFilterChange = (action: string) => {
+    setActivityFilter(action);
+    fetchActivityLogs(1, action || undefined);
+  };
+
+  const handleActivityPageChange = (page: number) => {
+    fetchActivityLogs(page, activityFilter || undefined);
+  };
 
   const approveUser = async (userId: string) => {
     setProcessingId(userId);
@@ -146,10 +242,30 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
             </p>
           </div>
           <nav className="space-y-1 text-sm font-medium text-slate-600">
-            <p className="rounded-xl bg-slate-900/5 px-3 py-2 text-slate-900">
-              Dashboard
-            </p>
-            <p className="rounded-xl px-3 py-2 text-slate-500">Users</p>
+            <button
+              type="button"
+              onClick={() => setActiveTab("users")}
+              className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-left transition ${
+                activeTab === "users"
+                  ? "bg-slate-900/5 text-slate-900"
+                  : "text-slate-500 hover:bg-slate-50"
+              }`}
+            >
+              <Users className="h-4 w-4" />
+              Users
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("activity")}
+              className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-left transition ${
+                activeTab === "activity"
+                  ? "bg-slate-900/5 text-slate-900"
+                  : "text-slate-500 hover:bg-slate-50"
+              }`}
+            >
+              <Activity className="h-4 w-4" />
+              Activity Logs
+            </button>
           </nav>
         </aside>
 
@@ -170,41 +286,83 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
           </header>
 
           <section className="space-y-6 px-6 py-8">
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                    Total Users
+            {/* Stats Grid - always visible */}
+            {activeTab === "users" && (
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Total Users
+                    </p>
+                    <Users className="h-5 w-5 text-brand-primary" aria-hidden />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-slate-900">
+                    {metrics.totalUsers}
                   </p>
-                  <Users className="h-5 w-5 text-brand-primary" aria-hidden />
                 </div>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">
-                  {metrics.totalUsers}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                    Approved
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Approved
+                    </p>
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-slate-900">
+                    {metrics.approvedUsers}
                   </p>
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden />
                 </div>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">
-                  {metrics.approvedUsers}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                    Pending Approval
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Pending Approval
+                    </p>
+                    <ShieldAlert className="h-5 w-5 text-amber-500" aria-hidden />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-slate-900">
+                    {metrics.pendingUsers}
                   </p>
-                  <ShieldAlert className="h-5 w-5 text-amber-500" aria-hidden />
                 </div>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">
-                  {metrics.pendingUsers}
-                </p>
               </div>
-            </div>
+            )}
+
+            {/* Activity Stats */}
+            {activeTab === "activity" && activityStats && (
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Total Activities
+                    </p>
+                    <Activity className="h-5 w-5 text-brand-primary" aria-hidden />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-slate-900">
+                    {activityStats.totalActivities}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Today&apos;s Activities
+                    </p>
+                    <Clock className="h-5 w-5 text-emerald-500" aria-hidden />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-slate-900">
+                    {activityStats.todayActivities}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                      Activity Types
+                    </p>
+                    <Shield className="h-5 w-5 text-amber-500" aria-hidden />
+                  </div>
+                  <p className="mt-3 text-3xl font-semibold text-slate-900">
+                    {activityStats.activityBreakdown.length}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {feedback ? (
               <div
@@ -223,7 +381,9 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
               </div>
             ) : null}
 
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            {/* Users Tab Content */}
+            {activeTab === "users" && (
+              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">
                   Users
@@ -349,6 +509,150 @@ const AdminDashboard = ({ stats, initialUsers, currentAdmin }: AdminDashboardPro
                 </div>
               ) : null}
             </div>
+            )}
+
+            {/* Activity Logs Tab Content */}
+            {activeTab === "activity" && (
+              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 py-4">
+                  <h2 className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">
+                    Activity Logs
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <select
+                      value={activityFilter}
+                      onChange={(e) => handleActivityFilterChange(e.target.value)}
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 focus:border-slate-400 focus:outline-none"
+                    >
+                      <option value="">All Activities</option>
+                      {activityTypes.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => fetchActivityLogs(activityPagination?.page || 1, activityFilter || undefined)}
+                      disabled={activityLoading}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+                    >
+                      <RefreshCw className={`h-4 w-4 ${activityLoading ? "animate-spin" : ""}`} aria-hidden />
+                      Refresh
+                    </button>
+                  </div>
+                </div>
+
+                {activityError && (
+                  <div className="px-6 py-4 text-sm text-red-600 bg-red-50">
+                    {activityError}
+                  </div>
+                )}
+
+                {activityLoading && activityLogs.length === 0 ? (
+                  <div className="px-6 py-10 text-center">
+                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-slate-400" />
+                    <p className="mt-2 text-sm text-slate-500">Loading activity logs...</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-slate-100 text-left text-sm text-slate-600">
+                        <thead className="bg-white">
+                          <tr>
+                            <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                              Activity
+                            </th>
+                            <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                              User
+                            </th>
+                            <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                              Details
+                            </th>
+                            <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                              IP Address
+                            </th>
+                            <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                              Date & Time
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                          {activityLogs.map((log) => (
+                            <tr key={log.id} className="hover:bg-slate-50/70">
+                              <td className="px-6 py-4">
+                                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                                  <Activity className="h-3 w-3" aria-hidden />
+                                  {log.actionLabel}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4">
+                                {log.userName || log.userEmail ? (
+                                  <>
+                                    <p className="font-medium text-slate-900">{log.userName || "—"}</p>
+                                    <p className="text-xs text-slate-500">{log.userEmail || "—"}</p>
+                                  </>
+                                ) : (
+                                  <span className="text-slate-400">System</span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 text-slate-600 max-w-xs truncate">
+                                {log.details || "—"}
+                              </td>
+                              <td className="px-6 py-4 text-slate-500 font-mono text-xs">
+                                {log.ipAddress || "—"}
+                              </td>
+                              <td className="px-6 py-4 text-slate-500">
+                                {log.createdAt
+                                  ? new Date(log.createdAt).toLocaleString()
+                                  : "—"}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {activityLogs.length === 0 && !activityLoading && (
+                      <div className="px-6 py-10 text-center text-sm text-slate-500">
+                        No activity logs found.
+                      </div>
+                    )}
+
+                    {/* Pagination */}
+                    {activityPagination && activityPagination.totalPages > 1 && (
+                      <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4">
+                        <p className="text-sm text-slate-500">
+                          Page {activityPagination.page} of {activityPagination.totalPages}
+                          {" • "}
+                          {activityPagination.total} total records
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleActivityPageChange(activityPagination.page - 1)}
+                            disabled={activityPagination.page <= 1 || activityLoading}
+                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <ChevronLeft className="h-4 w-4" aria-hidden />
+                            Previous
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleActivityPageChange(activityPagination.page + 1)}
+                            disabled={activityPagination.page >= activityPagination.totalPages || activityLoading}
+                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            Next
+                            <ChevronRight className="h-4 w-4" aria-hidden />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </section>
         </main>
       </div>

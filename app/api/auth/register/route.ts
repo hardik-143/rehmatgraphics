@@ -3,6 +3,7 @@ import { hash } from "bcryptjs";
 import { z } from "zod";
 import { createUser, findUserByEmail } from "@/lib/users";
 import { client } from "@/sanity/lib/client";
+import { logActivity, ACTIVITY_TYPES } from "@/lib/activityLogger";
 
 const registerSchema = z.object({
   firstName: z
@@ -145,7 +146,7 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    await createUser({
+    const newUser = await createUser({
       firstName,
       lastName,
       email,
@@ -162,6 +163,16 @@ export const POST = async (request: NextRequest) => {
       visitingCardAssetUrl,
       visitingCardOriginalFilename,
     });
+
+    // Log registration activity
+    await logActivity({
+      userId: newUser._id,
+      action: ACTIVITY_TYPES.REGISTER,
+      details: `New user registered: ${email}`,
+      metadata: { firmName, city, state },
+      request,
+    });
+
     return NextResponse.json(
       {
         pendingApproval: true,

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { sign } from "jsonwebtoken";
 import { clearUserOtp, findUserById, incrementOtpAttempts } from "@/lib/users";
 import { JWT_EXPIRES_IN, JWT_SECRET, SESSION_COOKIE_NAME } from "@/app/env";
+import { logActivity, ACTIVITY_TYPES } from "@/lib/activityLogger";
 
 const MAX_OTP_ATTEMPTS = 5;
 
@@ -83,6 +84,14 @@ export const POST = async (request: NextRequest) => {
     }
 
     await clearUserOtp(user._id);
+
+    // Log successful login activity
+    await logActivity({
+      userId: user._id,
+      action: ACTIVITY_TYPES.LOGIN,
+      details: `User logged in: ${user.email}`,
+      request,
+    });
 
     const token = sign(
       {
