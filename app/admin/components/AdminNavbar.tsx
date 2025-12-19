@@ -36,10 +36,10 @@ const AdminNavbar = ({ title = "Admin", currentAdmin }: { title?: string; curren
           <p className="text-sm text-slate-500">Manage admin tasks and review activity.</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white md:flex items-center gap-2">
+          {/* <div className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white md:flex items-center gap-2">
             <Shield className="h-4 w-4" aria-hidden />
             Admin Access Enabled
-          </div>
+          </div> */}
           <div className="relative">
             <button
               type="button"
