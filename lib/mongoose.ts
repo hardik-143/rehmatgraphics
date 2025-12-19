@@ -4,7 +4,6 @@ import { MONGODB_URI } from "@/app/env";
 const uri = MONGODB_URI;
 
 declare global {
-  // eslint-disable-next-line no-var
   var __mongooseConnection: Promise<typeof mongoose> | undefined;
 }
 

@@ -1,28 +1,23 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import type { PropsWithChildren } from "react";
-import { makePersistor, makeStore, type AppStore } from "./index";
+import { makePersistor, makeStore } from "./index";
 
-const StoreProvider = ({ children }: PropsWithChildren) => {
-  const storeRef = useRef<AppStore | null>(null);
-  const persistorRef = useRef<ReturnType<typeof makePersistor> | null>(null);
-
-  if (!storeRef.current) {
+export default function StoreProvider({ children }: PropsWithChildren) {
+  const [[store, persistor]] = useState(() => {
     const store = makeStore();
-    storeRef.current = store;
-    persistorRef.current = makePersistor(store);
-  }
+    const persistor = makePersistor(store);
+    return [store, persistor] as const;
+  });
 
   return (
-    <Provider store={storeRef.current!}>
-      <PersistGate persistor={persistorRef.current!} loading={null}>
+    <Provider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
         {children}
       </PersistGate>
     </Provider>
   );
-};
-
-export default StoreProvider;
+}

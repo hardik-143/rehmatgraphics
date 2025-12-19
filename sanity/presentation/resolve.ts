@@ -11,7 +11,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
         title: "title",
         slug: "slug.current",
       },
-      resolve: (doc) => ({
+      resolve: () => ({
         locations: [],
       }),
     }),

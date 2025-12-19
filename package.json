@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/eslint-plugin-next": "^16.1.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25",
     "@types/nodemailer": "^7.0.4",
@@ -52,8 +53,11 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.0"
   }
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.scss";
-import { sanityFetch, SanityLive } from "@/sanity/lib/live";
+import { SanityLive } from "@/sanity/lib/live";
 import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { DisableDraftMode } from "@/app/components/DisableDraftMode";
