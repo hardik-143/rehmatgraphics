@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 interface CurrentAdmin {
   email: string;

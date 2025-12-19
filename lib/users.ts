@@ -79,3 +79,50 @@ export const incrementOtpAttempts = async (userId: Types.ObjectId | string) => {
     { new: true }
   ).exec();
 };
+
+export const listUsers = async (page = 1, limit = 10) => {
+  await connectToDatabase();
+  const skip = (page - 1) * limit;
+
+  const [users, totalUsers] = await Promise.all([
+    User.find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .select(
+        "firstName lastName email phoneNumber firmName address visitingCardAssetId visitingCardAssetUrl visitingCardOriginalFilename is_admin is_approved createdAt updatedAt"
+      )
+      .lean(),
+    User.countDocuments().exec(),
+  ]);
+
+  return {
+    items: users.map((user) => ({
+      id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      firmName: user.firmName,
+      address: {
+        line1: user.address?.line1 ?? "",
+        line2: user.address?.line2 ?? "",
+        city: user.address?.city ?? "",
+        state: user.address?.state ?? "",
+      },
+      visitingCardAssetId: user.visitingCardAssetId ?? null,
+      visitingCardAssetUrl: user.visitingCardAssetUrl ?? null,
+      visitingCardOriginalFilename: user.visitingCardOriginalFilename ?? null,
+      is_admin: user.is_admin,
+      is_approved: user.is_approved,
+      createdAt: new Date(user.createdAt).toISOString(),
+      updatedAt: new Date(user.updatedAt).toISOString(),
+    })),
+    pagination: {
+      page,
+      limit,
+      total: totalUsers,
+      totalPages: Math.ceil(totalUsers / limit),
+    },
+  } as const;
+};

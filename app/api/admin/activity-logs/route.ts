@@ -16,8 +16,29 @@ export const GET = async (request: NextRequest) => {
 
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
-  const limit = Math.min(parseInt(searchParams.get("limit") || "50", 10), 100);
+  const limit = Math.min(parseInt(searchParams.get("limit") || "10", 10), 100);
   const action = searchParams.get("action") as ActivityType | null;
+  const range = searchParams.get("range") as "today" | "week" | "month" | "year" | null;
+  let dateFrom: Date | undefined = undefined;
+  if (range) {
+    const now = new Date();
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    if (range === "today") {
+      dateFrom = start;
+    } else if (range === "week") {
+      const day = start.getDay();
+      const diff = (day + 6) % 7; // Monday as start of week
+      start.setDate(start.getDate() - diff);
+      dateFrom = start;
+    } else if (range === "month") {
+      start.setDate(1);
+      dateFrom = start;
+    } else if (range === "year") {
+      start.setMonth(0, 1);
+      dateFrom = start;
+    }
+  }
   const userId = searchParams.get("userId") || undefined;
 
   try {
@@ -27,6 +48,7 @@ export const GET = async (request: NextRequest) => {
         limit,
         action: action && Object.values(ACTIVITY_TYPES).includes(action) ? action : undefined,
         userId,
+        dateFrom,
       }),
       getActivityStats(),
     ]);

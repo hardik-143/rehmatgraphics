@@ -84,14 +84,16 @@ export const getActivityLogs = async (options?: {
   limit?: number;
   action?: ActivityType;
   userId?: string;
+  dateFrom?: Date;
 }) => {
-  const { page = 1, limit = 50, action, userId } = options || {};
+  const { page = 1, limit = 50, action, userId, dateFrom } = options || {};
 
   await connectToDatabase();
 
   const query: Record<string, unknown> = {};
   if (action) query.action = action;
   if (userId) query.userId = new Types.ObjectId(userId);
+  if (dateFrom) query.createdAt = { $gte: dateFrom };
 
   const skip = (page - 1) * limit;
 

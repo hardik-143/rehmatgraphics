@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Users } from "lucide-react";
+import { Activity, Users, Package } from "lucide-react";
 
 interface CurrentAdmin {
   email: string;
@@ -10,8 +10,10 @@ interface CurrentAdmin {
 
 const AdminSidebar = ({ currentAdmin }: { currentAdmin: CurrentAdmin }) => {
   const pathname = usePathname();
-  const isUsers = pathname.startsWith("/admin") && !pathname.startsWith("/admin/activity");
+  const isDashboard = pathname === "/admin";
+  const isUsers = pathname.startsWith("/admin/users");
   const isActivity = pathname.startsWith("/admin/activity");
+  const isProducts = pathname.startsWith("/admin/products");
   return (
     <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white/90 px-6 py-8 shadow-sm lg:flex">
       <div className="mb-10">
@@ -26,11 +28,29 @@ const AdminSidebar = ({ currentAdmin }: { currentAdmin: CurrentAdmin }) => {
         <Link
           href="/admin"
           className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+            isDashboard ? "bg-slate-900/5 text-slate-900" : "text-slate-500 hover:bg-slate-50"
+          }`}
+        >
+          <Activity className="h-4 w-4" />
+          Dashboard
+        </Link>
+        <Link
+          href="/admin/users"
+          className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
             isUsers ? "bg-slate-900/5 text-slate-900" : "text-slate-500 hover:bg-slate-50"
           }`}
         >
           <Users className="h-4 w-4" />
           Users
+        </Link>
+        <Link
+          href="/admin/products"
+          className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+            isProducts ? "bg-slate-900/5 text-slate-900" : "text-slate-500 hover:bg-slate-50"
+          }`}
+        >
+          <Package className="h-4 w-4" />
+          Products
         </Link>
         <Link
           href="/admin/activity"
