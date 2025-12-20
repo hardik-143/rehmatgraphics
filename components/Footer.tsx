@@ -54,10 +54,10 @@ const Footer = ({
 
   return (
     <footer
-      className="relative overflow-hidden bg-brand-night text-slate-200"
+      className="relative overflow-hidden bg-amber-900 text-amber-100"
       id="contact"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-primary/10 via-transparent to-brand-secondary/10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 via-transparent to-amber-400/10" />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <h4 className="text-lg font-semibold text-white">{companyName}</h4>
@@ -84,7 +84,7 @@ const Footer = ({
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="transition duration-200 hover:text-brand-accent text-white"
+                  className="transition duration-200 hover:text-amber-400 text-white"
                 >
                   {item.label}
                 </Link>
@@ -99,14 +99,14 @@ const Footer = ({
           </h5>
           <Link
             href={phoneHref}
-            className="flex items-center gap-2 text-slate-300 transition duration-200 hover:text-brand-accent"
+            className="flex items-center gap-2 text-amber-200 transition duration-200 hover:text-amber-400"
           >
             <Phone className="h-4 w-4" aria-hidden />
             {phone}
           </Link>
           <Link
             href={emailHref}
-            className="flex items-center gap-2 text-slate-300 transition duration-200 hover:text-brand-accent"
+            className="flex items-center gap-2 text-amber-200 transition duration-200 hover:text-amber-400"
           >
             <Mail className="h-4 w-4" aria-hidden />
             {email}
@@ -130,7 +130,7 @@ const Footer = ({
                   key={link.label}
                   href={link.href}
                   aria-label={link.label}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-slate-200 transition duration-200 hover:border-brand-accent/70 hover:text-brand-accent"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-amber-100 transition duration-200 hover:border-amber-400/70 hover:text-amber-400"
                 >
                   <Icon className="h-5 w-5" aria-hidden />
                 </Link>
@@ -141,11 +141,11 @@ const Footer = ({
       </div>
 
       <div className="relative border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-xs text-white sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {companyName}. All rights reserved.
           </p>
-          <p className="text-slate-400">
+          <p>
             Crafted with precision for professional print partners.
           </p>
         </div>

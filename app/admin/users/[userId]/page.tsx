@@ -6,6 +6,7 @@ import { getActivityLogs } from "@/lib/activityLogger";
 import Link from "next/link";
 import { Activity, Mail, Phone, User as UserIcon, IdCard, MapPin } from "lucide-react";
 import AdminLayout from "@/app/admin/components/AdminLayout";
+import { Table, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 
 interface PageProps {
   params: { userId: string };
@@ -157,44 +158,44 @@ const AdminUserDetailPage = async ({ params, searchParams }: PageProps) => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-100 text-left text-sm text-slate-600">
-                  <thead className="bg-white">
-                    <tr>
-                      <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                <Table className="divide-y divide-slate-100 text-left text-sm text-slate-600">
+                  <TableHeader className="bg-white">
+                    <TableRow>
+                      <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
                         Action
-                      </th>
-                      <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                      </TableCell>
+                      <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
                         Details
-                      </th>
-                      <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                      </TableCell>
+                      <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
                         IP Address
-                      </th>
-                      <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
+                      </TableCell>
+                      <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">
                         Date & Time
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
+                      </TableCell>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="divide-y divide-slate-100 bg-white">
                     {logs.map((log) => (
-                      <tr key={log.id} className="hover:bg-slate-50/70">
-                        <td className="px-6 py-4">
+                      <TableRow key={log.id} className="hover:bg-slate-50/70">
+                        <TableCell className="px-6 py-4">
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
                             {log.action}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 text-slate-600 max-w-xs truncate">
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-600 max-w-xs truncate">
                           {log.details || "—"}
-                        </td>
-                        <td className="px-6 py-4 text-slate-500 font-mono text-xs">
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-500 font-mono text-xs">
                           {log.ipAddress || "—"}
-                        </td>
-                        <td className="px-6 py-4 text-slate-500">
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-500">
                           {log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                </table>
+                  </TableBody>
+                </Table>
               </div>
 
               {/* Pagination */}

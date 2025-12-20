@@ -15,8 +15,8 @@ import {
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { getCitiesForState, STATE_NAMES } from "@/app/utils/stateCityMap";
-import FormInput from "@/components/ui/FormInput";
-import FormSelect, { type FormSelectOption } from "@/components/ui/FormSelect";
+import FormInput from "@/components/ui/form/FormInput";
+import FormSelect, { type FormSelectOption } from "@/components/ui/form/FormSelect";
 
 type StatusState = {
   type: "idle" | "loading" | "success" | "error";

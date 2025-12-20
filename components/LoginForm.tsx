@@ -14,7 +14,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { setCredentials } from "@/store/authSlice";
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
-import FormInput from "@/components/ui/FormInput";
+import FormInput from "@/components/ui/form/FormInput";
 
 type StatusState = {
   type: "idle" | "loading" | "success" | "error";

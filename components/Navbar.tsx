@@ -91,12 +91,12 @@ const Navbar = ({
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-7 rounded-full border border-slate-200/70 bg-white/70 px-6 py-2 text-sm font-medium text-slate-600 shadow-sm backdrop-blur lg:flex">
+          <nav className="hidden items-center gap-7 rounded-full border border-amber-200/70 bg-white/70 px-6 py-2 text-sm font-medium text-amber-800 shadow-sm backdrop-blur lg:flex">
             {links.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="transition-colors duration-200 hover:text-brand-primary"
+                className="transition-colors duration-200 hover:text-amber-700"
               >
                 {link.label}
               </Link>
@@ -109,9 +109,9 @@ const Navbar = ({
                 <button
                   type="button"
                   onClick={toggleProfileMenu}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                  className="inline-flex items-center gap-2 rounded-full border border-amber-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-amber-800 shadow-sm transition duration-200 hover:border-amber-600 hover:text-amber-700"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/10 text-sm font-bold uppercase text-brand-primary">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-bold uppercase text-amber-700">
                     {initials}
                   </span>
                   <span className="max-w-[9rem] truncate text-left">
@@ -137,7 +137,7 @@ const Navbar = ({
                     {isAdmin ? (
                       <Link
                         href="/admin"
-                        className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
+                        className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:bg-amber-50 hover:text-amber-700"
                         onClick={closeProfileMenu}
                       >
                         Admin Dashboard
@@ -146,7 +146,7 @@ const Navbar = ({
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
+                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:bg-amber-50 hover:text-amber-700"
                     >
                       <LogOut className="h-4 w-4" aria-hidden />
                       Logout
@@ -158,13 +158,13 @@ const Navbar = ({
               <>
                 <Link
                   href={loginHref}
-                  className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                  className="rounded-full border border-amber-200 px-4 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:border-amber-600 hover:text-amber-700"
                 >
                   Login
                 </Link>
                 <Link
                   href={registerHref}
-                  className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-5 py-2 text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
+                  className="rounded-full bg-gradient-to-r from-amber-600 to-amber-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
                 >
                   Register
                 </Link>
@@ -205,21 +205,21 @@ const Navbar = ({
           <div className="mt-6 flex flex-col gap-2">
             {user ? (
               <>
-                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-white px-4 py-3 shadow-sm">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/10 text-base font-bold uppercase text-brand-primary">
                     {initials}
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-slate-900">
+                    <span className="text-sm font-semibold text-amber-900">
                       {displayName}
                     </span>
-                    <span className="text-xs text-slate-500">{user.email}</span>
+                    <span className="text-xs text-amber-700">{user.email}</span>
                   </div>
                 </div>
                 {isAdmin ? (
                   <Link
                     href="/admin"
-                    className="flex items-center justify-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                    className="flex items-center justify-center gap-2 rounded-full border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:border-amber-600 hover:text-amber-700"
                     onClick={closeMenu}
                   >
                     Admin Dashboard
@@ -228,7 +228,7 @@ const Navbar = ({
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 rounded-full border border-brand-primary/40 px-4 py-2 text-sm font-semibold text-brand-primary transition duration-200 hover:bg-brand-primary/10"
+                  className="flex items-center justify-center gap-2 rounded-full border border-amber-400/40 px-4 py-2 text-sm font-semibold text-amber-700 transition duration-200 hover:bg-amber-50"
                 >
                   <LogOut className="h-4 w-4" aria-hidden />
                   Logout
@@ -238,14 +238,14 @@ const Navbar = ({
               <>
                 <Link
                   href={loginHref}
-                  className="rounded-full border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-600 transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                  className="rounded-full border border-amber-300 px-4 py-2 text-center text-sm font-semibold text-amber-800 transition duration-200 hover:border-amber-600 hover:text-amber-700"
                   onClick={closeMenu}
                 >
                   Login
                 </Link>
                 <Link
                   href={registerHref}
-                  className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-4 py-2 text-center text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
+                  className="rounded-full bg-gradient-to-r from-amber-600 to-amber-500 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm transition duration-200 hover:shadow-md"
                   onClick={closeMenu}
                 >
                   Register

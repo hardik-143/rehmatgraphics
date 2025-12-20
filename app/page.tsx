@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-brand-ash/40 to-white text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-amber-100 to-amber-50 text-amber-900">
       <TopBar />
       <Navbar />
       <main>
@@ -25,7 +25,7 @@ const Page = () => {
         <OrderSteps />
         <ServicesGrid />
         <WhyChooseUs />
-        <section className="bg-brand-ash py-16 sm:py-20" id="downloads">
+        <section className="bg-amber-50 py-16 sm:py-20" id="downloads">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 lg:grid-cols-2">
             <PromoBlock />
             <FAQSection />

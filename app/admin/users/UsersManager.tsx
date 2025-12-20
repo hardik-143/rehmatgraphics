@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { Table, TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Loader2, CheckCircle2, Clock } from "lucide-react";
 import EmptyState from "@/app/admin/components/EmptyState";
 import { Search } from "lucide-react";
@@ -109,39 +110,36 @@ export default function UsersManager() {
               fetchPage(1, limit, next);
             }}
             className="w-64 rounded-lg border border-slate-200 bg-white pl-8 pr-3 py-1.5 text-sm text-slate-700 outline-none focus:border-slate-400"
-          />
+            />
+          </div>
         </div>
-      </div>
-
-      {error && <div className="px-6 py-3 text-sm text-red-600 bg-red-50">{error}</div>}
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-100 text-left text-sm text-slate-600">
-          <thead className="bg-white">
-            <tr>
-              <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Name</th>
-              <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Firm & Contact</th>
-              <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Location</th>
-              <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Visiting Card</th>
-              <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Status</th>
-              <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Joined</th>
-              <th className="px-6 py-3" />
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+        <div>
+            <Table className="divide-y divide-slate-100 text-left text-sm text-slate-600">
+              <TableHeader className="bg-white">
+                <TableRow>
+                  <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-[200px]">Name</TableCell>
+                  <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Firm & Contact</TableCell>
+                  <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-[200px]">Location</TableCell>
+                  <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-[170px]">Visiting Card</TableCell>
+                  <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Status</TableCell>
+                  <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Joined</TableCell>
+                  <TableCell isHeader className="px-6 py-3" />
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-slate-100 bg-white">
             {loading ? (
-              <tr>
-                <td colSpan={7} className="px-6 py-10 text-center">
+              <TableRow>
+                <TableCell colSpan={7} className="px-6 py-10 text-center">
                   <Loader2 className="mx-auto h-8 w-8 animate-spin text-slate-400" />
                   <p className="mt-2 text-sm text-slate-500">Loading users...</p>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : rows.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-6 py-8">
+              <TableRow>
+                <TableCell colSpan={7} className="px-6 py-8">
                   <EmptyState title="No users found" description="Newly registered users will appear here." />
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               rows.map((user) => {
                     const displayName = [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
@@ -150,24 +148,24 @@ export default function UsersManager() {
                     const streetLine = [user.address?.line1, user.address?.line2].filter(Boolean).join(", ");
 
                     return (
-                      <tr key={user.id} className="hover:bg-slate-50/70">
-                        <td className="px-6 py-4 text-slate-900">
+                      <TableRow key={user.id} className="hover:bg-slate-50/70">
+                        <TableCell className="px-6 py-4 text-slate-900">
                           <p className="font-medium">
                             <Link href={`/admin/users/${user.id}`} className="text-brand-primary hover:text-brand-secondary">
                               {displayName || "—"}
                             </Link>
                           </p>
                           <p className="text-xs text-slate-500">{user.firmName || "—"}</p>
-                        </td>
-                        <td className="px-6 py-4 text-slate-600">
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-600">
                           <p>{user.email}</p>
                           <p className="text-xs text-slate-500">{user.phoneNumber || "—"}</p>
-                        </td>
-                        <td className="px-6 py-4 text-slate-600">
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-600">
                           <p>{locationLine || "—"}</p>
-                          <p className="text-xs text-slate-500">{streetLine || ""}</p>
-                        </td>
-                        <td className="px-6 py-4 text-slate-600">
+                          <p className="text-xs text-slate-500 ">{streetLine || ""}</p>
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-600">
                           {user.visitingCardAssetUrl ? (
                             <a
                               href={user.visitingCardAssetUrl}
@@ -180,8 +178,8 @@ export default function UsersManager() {
                           ) : (
                             <span className="text-xs text-slate-400">Not uploaded</span>
                           )}
-                        </td>
-                        <td className="px-6 py-4">
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
                           {user.is_admin ? (
                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                               Admin
@@ -195,9 +193,9 @@ export default function UsersManager() {
                               <Clock className="h-3.5 w-3.5" /> Pending
                             </span>
                           )}
-                        </td>
-                        <td className="px-6 py-4 text-slate-500">{joined}</td>
-                        <td className="px-6 py-4 text-right">
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-slate-500">{joined}</TableCell>
+                        <TableCell className="px-6 py-4 text-right">
                           {!user.is_admin && !user.is_approved ? (
                             <button
                               type="button"
@@ -216,13 +214,13 @@ export default function UsersManager() {
                           ) : (
                             <span className="text-xs text-slate-400">{user.is_admin ? "Admin" : "Approved"}</span>
                           )}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {(loading || rows.length > 0) && (

@@ -20,7 +20,7 @@ const TopBar = ({
   const emailHref = `mailto:${email}`;
 
   return (
-    <div className="bg-gradient-to-r from-brand-night via-slate-950 to-brand-night text-xs text-slate-200">
+    <div className="bg-gradient-to-r from-amber-900 via-amber-950 to-amber-900 text-xs text-amber-100">
       <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:text-[13px]">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-slate-300">
           <span className="flex items-center gap-2 font-medium text-slate-100/90">
@@ -35,14 +35,14 @@ const TopBar = ({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Link
             href={emailHref}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 font-semibold text-slate-100 transition hover:border-brand-accent/60 hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 font-semibold text-amber-100 transition hover:border-amber-400/60 hover:text-white"
           >
             <Mail className="h-4 w-4" aria-hidden />
             {email}
           </Link>
           <Link
             href={phoneHref}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 font-semibold text-slate-100 transition hover:border-brand-accent/60 hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 font-semibold text-amber-100 transition hover:border-amber-400/60 hover:text-white"
           >
             <Phone className="h-4 w-4" aria-hidden />
             {phone}

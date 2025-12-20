@@ -21,7 +21,7 @@ const AdminLayout = ({
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="flex min-h-screen">
         <AdminSidebar currentAdmin={currentAdmin} />
-        <main className="flex-1">
+        <main className="flex-1 min-w-0">
           <AdminNavbar title={title} currentAdmin={currentAdmin} />
           <section className="space-y-6 px-6 py-8">{children}</section>
         </main>

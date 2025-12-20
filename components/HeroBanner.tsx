@@ -20,12 +20,12 @@ const HeroBanner = ({
 }: HeroBannerProps) => {
   return (
     <section
-      className="relative isolate overflow-hidden bg-brand-night text-slate-100"
+      className="relative isolate overflow-hidden bg-amber-900 text-amber-100"
       id="home"
     >
-      <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-brand-primary/20 via-transparent to-transparent" />
-      <div className="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-brand-secondary/30 blur-3xl" />
-      <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-brand-primary/20 blur-3xl" />
+      <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-amber-500/20 via-transparent to-transparent" />
+      <div className="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-amber-400/30 blur-3xl" />
+      <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-amber-500/20 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-20 sm:py-24 lg:grid-cols-[0.85fr_1fr_0.9fr]">
         <div className="relative hidden h-[22rem] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-card lg:block">
@@ -41,25 +41,25 @@ const HeroBanner = ({
         </div>
 
         <div className="relative z-10 flex flex-col items-center text-center lg:items-start lg:text-left">
-          <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-accent">
+          <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-300">
             Trade Print Network
           </span>
-          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl xl:text-6xl">
+          <h1 className="text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl">
             {title}
           </h1>
-          <p className="mt-5 max-w-xl text-base text-slate-200/80 sm:text-lg">
+          <p className="mt-5 max-w-xl text-base text-amber-100/90 sm:text-lg">
             {subtitle}
           </p>
           <div className="mt-10 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-start">
             <Link
               href={ctaHref}
-              className="w-full rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-7 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-brand-primary/30 transition duration-200 hover:shadow-xl hover:shadow-brand-primary/40 sm:w-auto"
+              className="w-full rounded-full bg-gradient-to-r from-amber-600 to-amber-500 px-7 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-amber-600/30 transition duration-200 hover:shadow-xl hover:shadow-amber-600/40 sm:w-auto"
             >
               {ctaLabel}
             </Link>
             <Link
               href="tel:+919876543210"
-              className="w-full rounded-full border border-white/20 px-7 py-3 text-center text-sm font-semibold text-slate-100 transition duration-200 hover:border-brand-accent/80 hover:text-white sm:w-auto"
+              className="w-full rounded-full border border-white/20 px-7 py-3 text-center text-sm font-semibold text-white/90 transition duration-200 hover:border-amber-300 hover:text-white sm:w-auto"
             >
               Talk to Sales
             </Link>
@@ -67,13 +67,13 @@ const HeroBanner = ({
           <div className="mt-10 grid w-full gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
               <p className="text-2xl font-semibold text-white">18+</p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-200/70">
+              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-amber-100/80">
                 Years in print production
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
               <p className="text-2xl font-semibold text-white">1.5k</p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-200/70">
+              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-amber-100/80">
                 Trade orders processed daily
               </p>
             </div>
@@ -81,7 +81,7 @@ const HeroBanner = ({
         </div>
 
         <div className="relative h-80 w-full overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/10 shadow-card sm:h-96 lg:h-[28rem]">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/30 via-transparent to-brand-secondary/20" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/30 via-transparent to-amber-400/20" />
           <Image
             src={bannerImageSrc}
             alt="Digital press illustration"

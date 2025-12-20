@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 // No URL syncing; state-managed filters
 import EmptyState from "@/app/admin/components/EmptyState";
 import { Loader2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 
 type ActivityTypeKey = string;
 
@@ -148,35 +149,35 @@ export default function ActivityManager() {
         )}
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 text-left text-sm text-slate-600">
-            <thead className="bg-white">
-              <tr>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Action</th>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">User</th>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Details</th>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">IP Address</th>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Date & Time</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
+          <Table className="divide-y divide-slate-100 text-left text-sm text-slate-600">
+            <TableHeader className="bg-white">
+              <TableRow>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Action</TableCell>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">User</TableCell>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Details</TableCell>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">IP Address</TableCell>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Date & Time</TableCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-slate-100 bg-white">
               {loading ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center">
+                <TableRow>
+                  <TableCell colSpan={5} className="px-6 py-10 text-center">
                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-slate-400" />
                     <p className="mt-2 text-sm text-slate-500">Loading activity logs...</p>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : items.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8">
+                <TableRow>
+                  <TableCell colSpan={5} className="px-6 py-8">
                     <EmptyState title="No activity logs found" description="Activity will appear as users interact with the platform." />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 items.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50/70">
-                    <td className="px-6 py-4">{log.actionLabel || log.action}</td>
-                    <td className="px-6 py-4">
+                  <TableRow key={log.id} className="hover:bg-slate-50/70">
+                    <TableCell className="px-6 py-4">{log.actionLabel || log.action}</TableCell>
+                    <TableCell className="px-6 py-4">
                       {log.userName || log.userEmail ? (
                         <>
                           <p className="font-medium text-slate-900">{log.userName || "—"}</p>
@@ -185,15 +186,15 @@ export default function ActivityManager() {
                       ) : (
                         <span className="text-slate-400">System</span>
                       )}
-                    </td>
-                    <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.details || "—"}</td>
-                    <td className="px-6 py-4 text-slate-500 font-mono text-xs">{log.ipAddress || "—"}</td>
-                    <td className="px-6 py-4 text-slate-500">{log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}</td>
-                  </tr>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.details || "—"}</TableCell>
+                    <TableCell className="px-6 py-4 text-slate-500 font-mono text-xs">{log.ipAddress || "—"}</TableCell>
+                    <TableCell className="px-6 py-4 text-slate-500">{log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}</TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {(loading || items.length > 0) && (

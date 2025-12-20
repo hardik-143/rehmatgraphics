@@ -14,50 +14,50 @@ export const metadata: Metadata = {
 
 const RegisterPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-brand-ash/40 to-white text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-amber-100 to-amber-50 text-amber-900">
       <TopBar />
       <Navbar registerHref="/register" loginHref="/login" />
       <main className="pb-20 pt-12 sm:pt-16">
         <section className="py-10 sm:py-16">
           <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="space-y-6">
-              <span className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-slate-600">
+              <span className="inline-flex items-center justify-center rounded-full border border-amber-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-amber-700">
                 Become an agent
               </span>
-              <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">
+              <h1 className="text-3xl font-semibold text-amber-900 sm:text-4xl">
                 Register for premium trade print access
               </h1>
-              <p className="text-base text-slate-600 sm:text-lg">
+              <p className="text-base text-amber-800 sm:text-lg">
                 Join India&rsquo;s fastest trade printing network. Submit this
                 quick form to unlock wholesale pricing, white-label delivery,
                 and expert prepress support tailored for agencies and print
                 brokers.
               </p>
-              <ul className="space-y-3 text-sm text-slate-600">
+              <ul className="space-y-3 text-sm text-amber-800">
                 <li className="flex items-center gap-3">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-ash text-brand-primary">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-700">
                     1
                   </span>
                   Exclusive price lists for 50+ print categories
                 </li>
                 <li className="flex items-center gap-3">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-ash text-brand-primary">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-700">
                     2
                   </span>
                   Dedicated account managers for enterprise jobs
                 </li>
                 <li className="flex items-center gap-3">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-ash text-brand-primary">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-700">
                     3
                   </span>
                   Live production tracking and white-label shipping
                 </li>
               </ul>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-amber-700">
                 Already registered?{" "}
                 <Link
                   href="/login"
-                  className="font-semibold text-brand-primary transition hover:text-brand-secondary"
+                  className="font-semibold text-amber-700 transition hover:text-amber-600"
                 >
                   Log in here.
                 </Link>

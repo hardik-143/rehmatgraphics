@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 // No URL syncing; state-managed pagination and search
 import { Loader2, Pencil, Plus, Trash2, Package, Search } from "lucide-react";
 import EmptyState from "@/app/admin/components/EmptyState";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 
 interface ProductRow {
   id: string;
@@ -154,31 +155,31 @@ export default function ProductsManager() {
           </button>
         </EmptyState>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 text-left text-sm text-slate-600">
-            <thead className="bg-white">
-              <tr>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Name</th>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Quantity</th>
-                <th className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Price</th>
-                <th className="px-6 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
+        <div>
+          <Table className="divide-y divide-slate-100 text-left text-sm text-slate-600">
+            <TableHeader className="bg-white">
+              <TableRow>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Name</TableCell>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Quantity</TableCell>
+                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Price</TableCell>
+                <TableCell isHeader className="px-6 py-3" />
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-slate-100 bg-white">
               {loading ? (
-                <td colSpan={4}>
+                <TableCell colSpan={4}>
         <div className="px-6 py-10 text-center">
           <Loader2 className="mx-auto h-8 w-8 animate-spin text-slate-400" />
           <p className="mt-2 text-sm text-slate-500">Loading products...</p>
         </div>
-                </td>
+                </TableCell>
       ) : (
         items.map((row) => (
-                <tr key={row.id} className="hover:bg-slate-50/70">
-                  <td className="px-6 py-4 text-slate-900">{row.name}</td>
-                  <td className="px-6 py-4">{row.quantity}</td>
-                  <td className="px-6 py-4">₹{row.price.toFixed(2)}</td>
-                  <td className="px-6 py-4 text-right">
+                <TableRow key={row.id} className="hover:bg-slate-50/70">
+                  <TableCell className="px-6 py-4 text-slate-900">{row.name}</TableCell>
+                  <TableCell className="px-6 py-4">{row.quantity}</TableCell>
+                  <TableCell className="px-6 py-4">₹{row.price.toFixed(2)}</TableCell>
+                  <TableCell className="px-6 py-4 text-right">
                     <button
                       type="button"
                       onClick={() => openEdit(row)}
@@ -193,12 +194,12 @@ export default function ProductsManager() {
                     >
                       <Trash2 className="h-4 w-4" /> Delete
                     </button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
       )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
 
