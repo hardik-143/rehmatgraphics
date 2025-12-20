@@ -6,7 +6,7 @@ import { getActivityLogs } from "@/lib/activityLogger";
 import Link from "next/link";
 import { Activity, Mail, Phone, User as UserIcon, IdCard, MapPin } from "lucide-react";
 import AdminLayout from "@/app/admin/components/AdminLayout";
-import { Table, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 
 interface PageProps {
   params: { userId: string };
