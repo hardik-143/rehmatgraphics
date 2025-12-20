@@ -20,9 +20,24 @@ export const GET = async (request: NextRequest) => {
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = Math.min(parseInt(searchParams.get("limit") || "10", 10), 100);
   const skip = (page - 1) * limit;
+  const q = (searchParams.get("q") || "").trim();
+  const regex = q ? new RegExp(q, "i") : null;
+  const filter = regex
+    ? {
+        $or: [
+          { firstName: regex },
+          { lastName: regex },
+          { email: regex },
+          { firmName: regex },
+          { phoneNumber: regex },
+          { "address.city": regex },
+          { "address.state": regex },
+        ],
+      }
+    : {};
 
-  const [users, totalUsers, approvedUsers] = await Promise.all([
-    User.find({})
+  const [users, filteredTotal, totalUsers, approvedUsers] = await Promise.all([
+    User.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
@@ -30,6 +45,7 @@ export const GET = async (request: NextRequest) => {
         "firstName lastName email phoneNumber firmName address visitingCardAssetId visitingCardAssetUrl visitingCardOriginalFilename is_admin is_approved createdAt updatedAt"
       )
       .lean(),
+    User.countDocuments(filter).exec(),
     User.countDocuments().exec(),
     User.countDocuments({ is_approved: true }).exec(),
   ]);
@@ -66,8 +82,8 @@ export const GET = async (request: NextRequest) => {
     pagination: {
       page,
       limit,
-      total: totalUsers,
-      totalPages: Math.ceil(totalUsers / limit),
+      total: filteredTotal,
+      totalPages: Math.ceil(filteredTotal / limit),
     },
   });
 };

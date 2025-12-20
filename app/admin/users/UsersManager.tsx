@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Loader2, CheckCircle2, Clock } from "lucide-react";
 import EmptyState from "@/app/admin/components/EmptyState";
+import { Search } from "lucide-react";
 
 interface AdminUserAddress {
   line1: string;
@@ -44,25 +45,26 @@ export default function UsersManager() {
   const [error, setError] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
   
-  // Read initial from URL
-  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-  const initialPage = params ? parseInt(params.get("page") || "1", 10) : 1;
-  const initialLimit = params ? parseInt(params.get("limit") || "10", 10) : 10;
+  // Manage state locally (no URL sync)
+  const initialPage = 1;
+  const initialLimit = 10;
+  const [q, setQ] = useState<string>("");
 
-  const fetchPage = async (page = 1, nextLimit = limit) => {
+  const fetchPage = async (page = 1, nextLimit = limit, nextQ = q) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/admin/users?page=${page}&limit=${nextLimit}`);
+      const usp = new URLSearchParams();
+      usp.set("page", String(page));
+      usp.set("limit", String(nextLimit));
+      if (nextQ) usp.set("q", nextQ);
+      const res = await fetch(`/api/admin/users?${usp.toString()}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch");
       setRows(data.items);
       setPagination(data.pagination);
       setLimit(data.pagination.limit);
-      const url = new URL(window.location.href);
-      url.searchParams.set("page", String(data.pagination.page));
-      url.searchParams.set("limit", String(data.pagination.limit));
-      window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}`);
+      // No URL updates; keep state-driven
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to fetch");
     } finally {
@@ -93,8 +95,22 @@ export default function UsersManager() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 py-2">
         <h2 className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">Users</h2>
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={q}
+            onChange={(e) => {
+              const next = e.target.value;
+              setQ(next);
+              fetchPage(1, limit, next);
+            }}
+            className="w-64 rounded-lg border border-slate-200 bg-white pl-8 pr-3 py-1.5 text-sm text-slate-700 outline-none focus:border-slate-400"
+          />
+        </div>
       </div>
 
       {error && <div className="px-6 py-3 text-sm text-red-600 bg-red-50">{error}</div>}
@@ -217,9 +233,9 @@ export default function UsersManager() {
               className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700"
               value={limit}
               onChange={(e) => {
-                const newLimit = Number(e.target.value);
-                setLimit(newLimit);
-                fetchPage(1, newLimit);
+                    const newLimit = Number(e.target.value);
+                    setLimit(newLimit);
+                    fetchPage(1, newLimit, q);
               }}
             >
               {[5, 10, 25, 50, 100].map((opt) => (
@@ -234,7 +250,7 @@ export default function UsersManager() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => fetchPage(Math.max(1, pagination.page - 1))}
+                      onClick={() => fetchPage(Math.max(1, pagination.page - 1), limit, q)}
                 disabled={pagination.page <= 1 || loading}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -242,7 +258,7 @@ export default function UsersManager() {
               </button>
               <button
                 type="button"
-                onClick={() => fetchPage(Math.min(pagination.totalPages || 1, (pagination.page || 1) + 1))}
+                      onClick={() => fetchPage(Math.min(pagination.totalPages || 1, (pagination.page || 1) + 1), limit, q)}
                 disabled={pagination.page >= (pagination.totalPages || 1) || loading}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
               >

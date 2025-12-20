@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+// No URL syncing; state-managed filters
 import EmptyState from "@/app/admin/components/EmptyState";
 import { Loader2 } from "lucide-react";
 
@@ -41,13 +41,10 @@ interface ActivityTypeItem {
 }
 
 export default function ActivityManager() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const initialPage = useMemo(() => parseInt(searchParams.get("page") || "1", 10), [searchParams]);
-  const initialLimit = useMemo(() => parseInt(searchParams.get("limit") || "10", 10), [searchParams]);
-  const initialAction = useMemo(() => searchParams.get("action") || "", [searchParams]);
-  const initialRange = useMemo(() => searchParams.get("range") || "", [searchParams]);
+  const initialPage = 1;
+  const initialLimit = 10;
+  const initialAction = "";
+  const initialRange = "";
 
   const [items, setItems] = useState<ActivityLogRow[]>([]);
   const [pagination, setPagination] = useState<Pagination>({ page: initialPage, limit: initialLimit, total: 0, totalPages: 0 });
@@ -78,15 +75,7 @@ export default function ActivityManager() {
       setStats(data.stats);
       setActivityTypes(data.activityTypes || []);
 
-      // Sync URL for shareable state
-      const urlParams = new URLSearchParams();
-      urlParams.set("page", String(data.pagination.page));
-      urlParams.set("limit", String(data.pagination.limit));
-      if (nextAction) urlParams.set("action", nextAction);
-      else urlParams.delete("action");
-      if (nextRange) urlParams.set("range", nextRange);
-      else urlParams.delete("range");
-      router.push(`?${urlParams.toString()}`);
+      // no URL updates; keep state-driven
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to fetch activity logs");
     } finally {

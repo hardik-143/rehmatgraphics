@@ -8,12 +8,13 @@ export interface CreateProductInput {
   price: number;
 }
 
-export const listProducts = async (page = 1, limit = 10) => {
+export const listProducts = async (page = 1, limit = 10, q?: string) => {
   await connectToDatabase();
   const skip = (page - 1) * limit;
+  const filter = q && q.trim().length > 0 ? { name: { $regex: q.trim(), $options: "i" } } : {};
   const [items, total] = await Promise.all([
-    Product.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-    Product.countDocuments({}),
+    Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Product.countDocuments(filter),
   ]);
   return {
     items: items.map((p) => ({

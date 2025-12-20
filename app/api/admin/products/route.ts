@@ -17,9 +17,10 @@ export const GET = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = Math.min(parseInt(searchParams.get("limit") || "10", 10), 100);
+  const q = (searchParams.get("q") || "").trim();
 
   try {
-    const data = await listProducts(page, limit);
+    const data = await listProducts(page, limit, q || undefined);
     return NextResponse.json(data);
   } catch (error) {
     console.error("GET /api/admin/products error:", error);
