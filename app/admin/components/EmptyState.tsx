@@ -1,20 +1,25 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
 export default function EmptyState({
   icon,
   title,
   description,
   children,
+  className,
 }: {
   icon?: ReactNode;
   title: string;
   description?: string;
   children?: ReactNode;
+  className?: string;
 }) {
+  const rootClassName = className ? className : '';
   return (
-    <div className="px-6 py-10 text-center">
+    <div
+      className={`px-6 py-10 text-center max-w-[calc(100vw-48px)] max-md:max-w-[calc(100vw-32px)] ${rootClassName} `}
+    >
       <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
         {icon ?? (
           <svg

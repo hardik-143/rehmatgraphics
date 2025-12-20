@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "format": "prettier --write .",
     "typegen": "sanity typegen generate",
     "extract-types": "sanity schema extract --enforce-required-fields"
   },
@@ -43,8 +44,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4.0.8",
     "@next/eslint-plugin-next": "^16.1.0",
+    "@tailwindcss/postcss": "^4.0.8",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25",
     "@types/nodemailer": "^7.0.4",
@@ -54,9 +55,11 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "postcss": "^8.4.49",
+    "prettier": "^3.7.4",
     "tailwindcss": "^4.0.8",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0"

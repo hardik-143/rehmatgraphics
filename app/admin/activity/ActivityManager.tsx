@@ -1,10 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from 'react';
 // No URL syncing; state-managed filters
-import EmptyState from "@/app/admin/components/EmptyState";
-import { Loader2 } from "lucide-react";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import EmptyState from '@/app/admin/components/EmptyState';
+import { Loader2 } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 type ActivityTypeKey = string;
 
@@ -44,11 +50,16 @@ interface ActivityTypeItem {
 export default function ActivityManager() {
   const initialPage = 1;
   const initialLimit = 10;
-  const initialAction = "";
-  const initialRange = "";
+  const initialAction = '';
+  const initialRange = '';
 
   const [items, setItems] = useState<ActivityLogRow[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({ page: initialPage, limit: initialLimit, total: 0, totalPages: 0 });
+  const [pagination, setPagination] = useState<Pagination>({
+    page: initialPage,
+    limit: initialLimit,
+    total: 0,
+    totalPages: 0,
+  });
   const [stats, setStats] = useState<Stats | null>(null);
   const [activityTypes, setActivityTypes] = useState<ActivityTypeItem[]>([]);
   const [action, setAction] = useState<string>(initialAction);
@@ -57,19 +68,25 @@ export default function ActivityManager() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async (page = pagination.page, nextLimit = limit, nextAction = action, nextRange = range) => {
+  const fetchData = async (
+    page = pagination.page,
+    nextLimit = limit,
+    nextAction = action,
+    nextRange = range
+  ) => {
     setLoading(true);
     setError(null);
     try {
       const params = new URLSearchParams();
-      params.set("page", String(page));
-      params.set("limit", String(nextLimit));
-      if (nextAction) params.set("action", nextAction);
-      if (nextRange) params.set("range", nextRange);
+      params.set('page', String(page));
+      params.set('limit', String(nextLimit));
+      if (nextAction) params.set('action', nextAction);
+      if (nextRange) params.set('range', nextRange);
 
       const res = await fetch(`/api/admin/activity-logs?${params.toString()}`);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to fetch activity logs");
+      if (!res.ok)
+        throw new Error(data.error || 'Failed to fetch activity logs');
 
       setItems(data.logs);
       setPagination(data.pagination);
@@ -78,7 +95,9 @@ export default function ActivityManager() {
 
       // no URL updates; keep state-driven
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to fetch activity logs");
+      setError(
+        e instanceof Error ? e.message : 'Failed to fetch activity logs'
+      );
     } finally {
       setLoading(false);
     }
@@ -87,30 +106,43 @@ export default function ActivityManager() {
   // Initial fetch
   useEffect(() => {
     fetchData(initialPage, initialLimit, initialAction, initialRange);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Total Activities</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-900">{stats?.totalActivities ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+            Total Activities
+          </p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900">
+            {stats?.totalActivities ?? 0}
+          </p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Today&apos;s Activities</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-900">{stats?.todayActivities ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+            Today&apos;s Activities
+          </p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900">
+            {stats?.todayActivities ?? 0}
+          </p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Activity Types</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-900">{stats?.activityBreakdown?.length ?? 0}</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+            Activity Types
+          </p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900">
+            {stats?.activityBreakdown?.length ?? 0}
+          </p>
         </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 py-2">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">Activity Logs</h2>
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 max-md:px-4 py-2 max-md:py-4 gap-y-4 flex-wrap">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">
+            Activity Logs
+          </h2>
+          <div className="flex items-center gap-3 gap-y-3 flex-wrap">
             <select
               value={action}
               onChange={(e) => {
@@ -122,7 +154,9 @@ export default function ActivityManager() {
             >
               <option value="">All Activities</option>
               {activityTypes.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
               ))}
             </select>
             {/* Optional: range filter */}
@@ -145,95 +179,151 @@ export default function ActivityManager() {
         </div>
 
         {error && (
-          <div className="px-6 py-3 text-sm text-red-600 bg-red-50">{error}</div>
+          <div className="px-6 py-3 text-sm text-red-600 bg-red-50">
+            {error}
+          </div>
         )}
-
-        <div className="overflow-x-auto">
-          <Table className="divide-y divide-slate-100 text-left text-sm text-slate-600">
-            <TableHeader className="bg-white">
-              <TableRow>
-                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Action</TableCell>
-                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">User</TableCell>
-                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Details</TableCell>
-                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">IP Address</TableCell>
-                <TableCell isHeader className="px-6 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500">Date & Time</TableCell>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="divide-y divide-slate-100 bg-white">
-              {loading ? (
+        {loading ? (
+          <div className="px-6 py-10 text-center">
+            <Loader2 className="mx-auto h-8 w-8 animate-spin text-slate-400" />
+            <p className="mt-2 text-sm text-slate-500">
+              Loading activity logs...
+            </p>
+          </div>
+        ) : items.length === 0 ? (
+          <EmptyState
+            title="No activity logs found"
+            description="Activity will appear as users interact with the platform."
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <Table className="divide-y divide-slate-100 text-left text-sm text-slate-600">
+              <TableHeader className="bg-white">
                 <TableRow>
-                  <TableCell colSpan={5} className="px-6 py-10 text-center">
-                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-slate-400" />
-                    <p className="mt-2 text-sm text-slate-500">Loading activity logs...</p>
+                  <TableCell
+                    isHeader
+                    className="px-6 max-md:px-4 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-32.5"
+                  >
+                    Action
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-6 max-md:px-4 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-47.5"
+                  >
+                    User
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-6 max-md:px-4 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-72.5"
+                  >
+                    Details
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-6 max-md:px-4 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-32.5"
+                  >
+                    IP Address
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-6 max-md:px-4 py-3 font-semibold uppercase tracking-widest text-xs text-slate-500 min-w-50"
+                  >
+                    Date & Time
                   </TableCell>
                 </TableRow>
-              ) : items.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="px-6 py-8">
-                    <EmptyState title="No activity logs found" description="Activity will appear as users interact with the platform." />
-                  </TableCell>
-                </TableRow>
-              ) : (
-                items.map((log) => (
+              </TableHeader>
+              <TableBody className="divide-y divide-slate-100 bg-white">
+                {items.map((log) => (
                   <TableRow key={log.id} className="hover:bg-slate-50/70">
-                    <TableCell className="px-6 py-4">{log.actionLabel || log.action}</TableCell>
-                    <TableCell className="px-6 py-4">
+                    <TableCell className="px-6 py-4 max-md:px-4">
+                      {log.actionLabel || log.action}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 max-md:px-4">
                       {log.userName || log.userEmail ? (
                         <>
-                          <p className="font-medium text-slate-900">{log.userName || "—"}</p>
-                          <p className="text-xs text-slate-500">{log.userEmail || "—"}</p>
+                          <p className="font-medium text-slate-900">
+                            {log.userName || '—'}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {log.userEmail || '—'}
+                          </p>
                         </>
                       ) : (
                         <span className="text-slate-400">System</span>
                       )}
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.details || "—"}</TableCell>
-                    <TableCell className="px-6 py-4 text-slate-500 font-mono text-xs">{log.ipAddress || "—"}</TableCell>
-                    <TableCell className="px-6 py-4 text-slate-500">{log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}</TableCell>
+                    <TableCell className="px-6 py-4 max-md:px-4 text-slate-600 max-w-xs truncate">
+                      {log.details || '—'}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 max-md:px-4  text-slate-500 font-mono text-xs">
+                      {log.ipAddress || '—'}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 max-md:px-4 text-slate-500">
+                      {log.createdAt
+                        ? new Date(log.createdAt).toLocaleString()
+                        : '—'}
+                    </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
 
         {(loading || items.length > 0) && (
-        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4">
-          <div className="flex items-center gap-3">
-            <label className="text-sm text-slate-500">Rows per page</label>
-            <select
-              value={limit}
-              onChange={(e) => {
-                const next = Number(e.target.value);
-                setLimit(next);
-                fetchData(1, next, action, range);
-              }}
-              className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700"
-            >
-              {[5, 10, 25, 50, 100].map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
+          <div className="flex items-center justify-between flex-wrap gap-y-4 border-t border-slate-200 bg-slate-50 px-6 py-4">
+            <div className="flex items-center gap-3">
+              <label className="text-sm text-slate-500">Rows per page</label>
+              <select
+                value={limit}
+                onChange={(e) => {
+                  const next = Number(e.target.value);
+                  setLimit(next);
+                  fetchData(1, next, action, range);
+                }}
+                className="rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700"
+              >
+                {[5, 10, 25, 50, 100].map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center justify-between sm:justify-end sm:gap-4">
+              <p className="text-sm text-slate-500 whitespace-nowrap">
+                Page {pagination.page} of {pagination.totalPages} •{' '}
+                {pagination.total} total
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fetchData(Math.max(1, pagination.page - 1))}
+                  disabled={pagination.page <= 1 || loading}
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    fetchData(
+                      Math.min(
+                        pagination.totalPages || 1,
+                        (pagination.page || 1) + 1
+                      )
+                    )
+                  }
+                  disabled={
+                    pagination.page >= (pagination.totalPages || 1) || loading
+                  }
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => fetchData(Math.max(1, pagination.page - 1))}
-              disabled={pagination.page <= 1 || loading}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <button
-              type="button"
-              onClick={() => fetchData(Math.min(pagination.totalPages || 1, (pagination.page || 1) + 1))}
-              disabled={pagination.page >= (pagination.totalPages || 1) || loading}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        </div>
         )}
       </div>
     </>

@@ -25,17 +25,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   preventHideOnScroll = false, // ⭐ default: false (hide on scroll)
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const container = useRef(document.createElement("div"));
   const [coords, setCoords] = useState({ top: 0, left: 0 });
-
-  // Mount portal container
-  useEffect(() => {
-    const mountNode = container.current;
-    document.body.appendChild(mountNode);
-    return () => {
-      document.body.removeChild(mountNode);
-    };
-  }, []);
 
   // Positioning logic + scroll handling
   useEffect(() => {
@@ -126,6 +116,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       {children}
     </div>,
-    container.current
+    document.body
   );
 };
