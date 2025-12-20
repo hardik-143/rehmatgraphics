@@ -229,8 +229,10 @@ body {
 }
 
 a {
-  text-decoration: underline;
-  text-underline-offset: 4px;
   font-weight: 500;
   color: var(--oxford-navy);
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
 }
