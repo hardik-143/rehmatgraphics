@@ -121,13 +121,34 @@ export const getActivityLogs = async (options?: {
 /**
  * Get activity stats summary
  */
-export const getActivityStats = async () => {
+export const getActivityStats = async (options?: { range?: "today" | "week" | "month" | "year" }) => {
   await connectToDatabase();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [totalActivities, todayActivities, activityBreakdown] =
+  // Optional range filter for stats
+  let rangeFrom: Date | undefined;
+  const range = options?.range;
+  if (range) {
+    const start = new Date(today);
+    if (range === "today") {
+      rangeFrom = start;
+    } else if (range === "week") {
+      const day = start.getDay();
+      const diff = (day + 6) % 7; // Monday start
+      start.setDate(start.getDate() - diff);
+      rangeFrom = start;
+    } else if (range === "month") {
+      start.setDate(1);
+      rangeFrom = start;
+    } else if (range === "year") {
+      start.setMonth(0, 1);
+      rangeFrom = start;
+    }
+  }
+
+  const [totalActivities, todayActivities, activityBreakdown, rangeActivities] =
     await Promise.all([
       ActivityLog.countDocuments(),
       ActivityLog.countDocuments({ createdAt: { $gte: today } }),
@@ -142,11 +163,15 @@ export const getActivityStats = async () => {
           $sort: { count: -1 },
         },
       ]),
+      rangeFrom
+        ? ActivityLog.countDocuments({ createdAt: { $gte: rangeFrom } })
+        : Promise.resolve(0),
     ]);
 
   return {
     totalActivities,
     todayActivities,
+    rangeActivities,
     activityBreakdown: activityBreakdown.map((item) => ({
       action: item._id,
       count: item.count,

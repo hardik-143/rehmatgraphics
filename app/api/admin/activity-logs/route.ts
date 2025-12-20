@@ -50,7 +50,7 @@ export const GET = async (request: NextRequest) => {
         userId,
         dateFrom,
       }),
-      getActivityStats(),
+      getActivityStats({ range: range || undefined }),
     ]);
 
     return NextResponse.json({
