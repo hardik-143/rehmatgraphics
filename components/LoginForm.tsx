@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Loader2,
   LogIn,
@@ -8,16 +8,16 @@ import {
   Lock,
   ShieldCheck,
   KeyRound,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/store/hooks";
-import { setCredentials } from "@/store/authSlice";
-import { Formik, Form, useFormikContext } from "formik";
-import * as Yup from "yup";
-import FormInput from "@/components/ui/form/FormInput";
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/store/hooks';
+import { setCredentials } from '@/store/authSlice';
+import { Formik, Form, useFormikContext } from 'formik';
+import * as Yup from 'yup';
+import FormInput from '@/components/ui/form/FormInput';
 
 type StatusState = {
-  type: "idle" | "loading" | "success" | "error";
+  type: 'idle' | 'loading' | 'success' | 'error';
   message: string | null;
 };
 
@@ -31,28 +31,28 @@ interface OtpFormValues {
 }
 
 const loginInitialValues: LoginFormValues = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 };
 
 const otpInitialValues: OtpFormValues = {
-  otpCode: "",
+  otpCode: '',
 };
 
 const loginValidationSchema = Yup.object().shape({
   email: Yup.string()
     .trim()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
+    .email('Please enter a valid email address')
+    .required('Email is required'),
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
 });
 
 const otpValidationSchema = Yup.object().shape({
   otpCode: Yup.string()
-    .matches(/^[0-9]{6}$/, "Enter the 6-digit code we emailed you")
-    .required("OTP code is required"),
+    .matches(/^[0-9]{6}$/, 'Enter the 6-digit code we emailed you')
+    .required('OTP code is required'),
 });
 
 interface CredentialsFormProps {
@@ -107,7 +107,11 @@ interface OtpFormComponentProps {
   isDev?: boolean;
 }
 
-const OtpFormComponent = ({ email, isLoading, isDev }: OtpFormComponentProps) => {
+const OtpFormComponent = ({
+  email,
+  isLoading,
+  isDev,
+}: OtpFormComponentProps) => {
   const { values, handleChange, handleBlur, errors, touched } =
     useFormikContext<OtpFormValues>();
 
@@ -118,10 +122,15 @@ const OtpFormComponent = ({ email, isLoading, isDev }: OtpFormComponentProps) =>
       <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
         {isDev ? (
           <span className="font-medium text-amber-600">
-            Dev mode: Enter <code className="rounded bg-amber-100 px-1">000000</code> as your OTP.
+            Dev mode: Enter{' '}
+            <code className="rounded bg-amber-100 px-1">000000</code> as your
+            OTP.
           </span>
         ) : (
-          <>We sent a 6-digit security code to {email}. Enter it below to finish signing in.</>
+          <>
+            We sent a 6-digit security code to {email}. Enter it below to finish
+            signing in.
+          </>
         )}
       </div>
       <label className="group relative flex flex-col">
@@ -130,7 +139,7 @@ const OtpFormComponent = ({ email, isLoading, isDev }: OtpFormComponentProps) =>
         </span>
         <div
           className={`mt-2 flex items-center gap-2 rounded-2xl border bg-white px-4 py-3 transition duration-200 group-focus-within:border-brand-primary group-focus-within:shadow-sm ${
-            showError ? "border-red-300" : "border-slate-200"
+            showError ? 'border-red-300' : 'border-slate-200'
           }`}
         >
           <KeyRound className="h-4 w-4 text-slate-400" aria-hidden />
@@ -177,20 +186,20 @@ const OtpFormComponent = ({ email, isLoading, isDev }: OtpFormComponentProps) =>
 const LoginForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [step, setStep] = useState<"credentials" | "otp">("credentials");
+  const [step, setStep] = useState<'credentials' | 'otp'>('credentials');
   const [userId, setUserId] = useState<string | null>(null);
-  const [savedEmail, setSavedEmail] = useState<string>("");
+  const [savedEmail, setSavedEmail] = useState<string>('');
   const [isDev, setIsDev] = useState<boolean>(false);
   const [status, setStatus] = useState<StatusState>({
-    type: "idle",
+    type: 'idle',
     message: null,
   });
 
   const resetFlow = () => {
     setUserId(null);
-    setSavedEmail("");
+    setSavedEmail('');
     setIsDev(false);
-    setStep("credentials");
+    setStep('credentials');
   };
 
   const handleCredentialsSubmit = async (
@@ -198,15 +207,15 @@ const LoginForm = () => {
     { resetForm }: { resetForm: () => void }
   ) => {
     setStatus({
-      type: "loading",
-      message: "Verifying your credentials…",
+      type: 'loading',
+      message: 'Verifying your credentials…',
     });
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(values),
       });
@@ -215,22 +224,22 @@ const LoginForm = () => {
 
       if (!response.ok) {
         const message =
-          typeof data?.error === "string" ? data.error : "Unable to sign in.";
-        setStatus({ type: "error", message });
+          typeof data?.error === 'string' ? data.error : 'Unable to sign in.';
+        setStatus({ type: 'error', message });
         return;
       }
 
-      if (data?.otpRequired && typeof data?.userId === "string") {
+      if (data?.otpRequired && typeof data?.userId === 'string') {
         setUserId(data.userId);
         setSavedEmail(values.email);
         setIsDev(data?.isDev === true);
-        setStep("otp");
+        setStep('otp');
         setStatus({
-          type: "success",
+          type: 'success',
           message:
-            typeof data?.message === "string"
+            typeof data?.message === 'string'
               ? data.message
-              : "We just sent a one-time code to your email.",
+              : 'We just sent a one-time code to your email.',
         });
         return;
       }
@@ -241,18 +250,18 @@ const LoginForm = () => {
 
       const firstName = data?.user?.firstName as string | undefined;
       setStatus({
-        type: "success",
+        type: 'success',
         message: firstName
           ? `Welcome back, ${firstName}. Redirecting…`
-          : "Login successful. Redirecting…",
+          : 'Login successful. Redirecting…',
       });
       resetForm();
-      router.push("/");
+      router.push('/');
     } catch (error) {
-      console.error("Login error:", error);
+      console.error('Login error:', error);
       setStatus({
-        type: "error",
-        message: "Something went wrong. Please try again.",
+        type: 'error',
+        message: 'Something went wrong. Please try again.',
       });
     }
   };
@@ -262,24 +271,24 @@ const LoginForm = () => {
     { resetForm }: { resetForm: () => void }
   ) => {
     setStatus({
-      type: "loading",
-      message: "Checking your one-time code…",
+      type: 'loading',
+      message: 'Checking your one-time code…',
     });
 
     try {
       if (!userId) {
         setStatus({
-          type: "error",
-          message: "We lost your session. Please start over.",
+          type: 'error',
+          message: 'We lost your session. Please start over.',
         });
         resetFlow();
         return;
       }
 
-      const response = await fetch("/api/auth/verify-otp", {
-        method: "POST",
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId, otpCode: values.otpCode }),
       });
@@ -288,10 +297,10 @@ const LoginForm = () => {
 
       if (!response.ok) {
         const message =
-          typeof data?.error === "string"
+          typeof data?.error === 'string'
             ? data.error
             : "We couldn't verify that code.";
-        setStatus({ type: "error", message });
+        setStatus({ type: 'error', message });
         if (response.status === 400 || response.status === 429) {
           resetFlow();
         }
@@ -304,29 +313,29 @@ const LoginForm = () => {
 
       const firstName = data?.user?.firstName as string | undefined;
       setStatus({
-        type: "success",
+        type: 'success',
         message: firstName
           ? `Welcome back, ${firstName}. Redirecting…`
-          : "Login successful. Redirecting…",
+          : 'Login successful. Redirecting…',
       });
       resetForm();
       resetFlow();
-      router.push("/");
+      router.push('/');
     } catch (error) {
-      console.error("OTP verification error:", error);
+      console.error('OTP verification error:', error);
       setStatus({
-        type: "error",
-        message: "Something went wrong. Please try again.",
+        type: 'error',
+        message: 'Something went wrong. Please try again.',
       });
     }
   };
 
-  const isLoading = status.type === "loading";
+  const isLoading = status.type === 'loading';
 
   return (
     <div
       id="login"
-      className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white p-8 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg"
+      className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white p-8 shadow-sm"
     >
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-secondary via-brand-accent to-brand-primary" />
       <div className="relative">
@@ -342,7 +351,7 @@ const LoginForm = () => {
         </p>
       </div>
 
-      {step === "credentials" ? (
+      {step === 'credentials' ? (
         <Formik
           initialValues={loginInitialValues}
           validationSchema={loginValidationSchema}
@@ -359,21 +368,25 @@ const LoginForm = () => {
           onSubmit={handleOtpSubmit}
         >
           <Form className="relative space-y-4">
-            <OtpFormComponent email={savedEmail} isLoading={isLoading} isDev={isDev} />
+            <OtpFormComponent
+              email={savedEmail}
+              isLoading={isLoading}
+              isDev={isDev}
+            />
           </Form>
         </Formik>
       )}
 
-      {status.type !== "idle" && status.message ? (
+      {status.type !== 'idle' && status.message ? (
         <div
-          role={status.type === "error" ? "alert" : "status"}
+          role={status.type === 'error' ? 'alert' : 'status'}
           className={`flex items-start gap-2 rounded-2xl border px-4 py-3 text-sm ${
-            status.type === "error"
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-slate-200 bg-slate-900 text-slate-100"
+            status.type === 'error'
+              ? 'border-red-200 bg-red-50 text-red-700'
+              : 'border-slate-200 bg-slate-900 text-slate-100'
           }`}
         >
-          {status.type === "success" ? (
+          {status.type === 'success' ? (
             <ShieldCheck className="mt-0.5 h-4 w-4" aria-hidden />
           ) : null}
           <span>{status.message}</span>

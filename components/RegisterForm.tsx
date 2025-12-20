@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from 'react';
 import {
   Building2,
   CheckCircle2,
@@ -11,15 +11,17 @@ import {
   Phone,
   Upload,
   User,
-} from "lucide-react";
-import { Formik, Form, useFormikContext } from "formik";
-import * as Yup from "yup";
-import { getCitiesForState, STATE_NAMES } from "@/app/utils/stateCityMap";
-import FormInput from "@/components/ui/form/FormInput";
-import FormSelect, { type FormSelectOption } from "@/components/ui/form/FormSelect";
+} from 'lucide-react';
+import { Formik, Form, useFormikContext } from 'formik';
+import * as Yup from 'yup';
+import { getCitiesForState, STATE_NAMES } from '@/app/utils/stateCityMap';
+import FormInput from '@/components/ui/form/FormInput';
+import FormSelect, {
+  type FormSelectOption,
+} from '@/components/ui/form/FormSelect';
 
 type StatusState = {
-  type: "idle" | "loading" | "success" | "error";
+  type: 'idle' | 'loading' | 'success' | 'error';
   message: string | null;
 };
 
@@ -37,52 +39,52 @@ interface RegisterFormValues {
 }
 
 const initialValues: RegisterFormValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-  phoneNumber: "",
-  firmName: "",
-  addressLine1: "",
-  addressLine2: "",
-  city: "",
-  state: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  phoneNumber: '',
+  firmName: '',
+  addressLine1: '',
+  addressLine2: '',
+  city: '',
+  state: '',
 };
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string()
     .trim()
-    .min(2, "First name must be at least 2 characters")
-    .required("First name is required"),
+    .min(2, 'First name must be at least 2 characters')
+    .required('First name is required'),
   lastName: Yup.string()
     .trim()
-    .min(2, "Last name must be at least 2 characters")
-    .required("Last name is required"),
+    .min(2, 'Last name must be at least 2 characters')
+    .required('Last name is required'),
   email: Yup.string()
     .trim()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
+    .email('Please enter a valid email address')
+    .required('Email is required'),
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .max(72, "Password must be at most 72 characters")
-    .required("Password is required"),
+    .min(8, 'Password must be at least 8 characters')
+    .max(72, 'Password must be at most 72 characters')
+    .required('Password is required'),
   phoneNumber: Yup.string()
     .trim()
-    .min(7, "Phone number must be at least 7 characters")
-    .max(20, "Phone number must be at most 20 characters")
-    .matches(/^[0-9+\-()\s]*$/, "Enter a valid phone number")
-    .required("Phone number is required"),
+    .min(7, 'Phone number must be at least 7 characters')
+    .max(20, 'Phone number must be at most 20 characters')
+    .matches(/^[0-9+\-()\s]*$/, 'Enter a valid phone number')
+    .required('Phone number is required'),
   firmName: Yup.string()
     .trim()
-    .min(2, "Firm name must be at least 2 characters")
-    .required("Firm name is required"),
+    .min(2, 'Firm name must be at least 2 characters')
+    .required('Firm name is required'),
   addressLine1: Yup.string()
     .trim()
-    .min(3, "Address must be at least 3 characters")
-    .required("Address is required"),
-  addressLine2: Yup.string().trim().max(120, "Address line 2 is too long"),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
+    .min(3, 'Address must be at least 3 characters')
+    .required('Address is required'),
+  addressLine2: Yup.string().trim().max(120, 'Address line 2 is too long'),
+  state: Yup.string().required('State is required'),
+  city: Yup.string().required('City is required'),
 });
 
 const stateOptions: FormSelectOption[] = STATE_NAMES.map((state) => ({
@@ -104,8 +106,8 @@ const StateCitySelects = ({
   const handleStateChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const newState = e.target.value;
-      void setFieldValue("state", newState);
-      void setFieldValue("city", "");
+      void setFieldValue('state', newState);
+      void setFieldValue('city', '');
       onStateChange(newState);
     },
     [setFieldValue, onStateChange]
@@ -128,7 +130,9 @@ const StateCitySelects = ({
             className="w-full border-none bg-transparent text-sm text-slate-900 focus:outline-none disabled:text-slate-400"
           >
             <option value="">
-              {stateOptions.length === 0 ? "States unavailable" : "Select state"}
+              {stateOptions.length === 0
+                ? 'States unavailable'
+                : 'Select state'}
             </option>
             {stateOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -145,10 +149,10 @@ const StateCitySelects = ({
         options={cityOptions}
         placeholder={
           !values.state
-            ? "Select state first"
+            ? 'Select state first'
             : cityOptions.length === 0
-            ? "Cities unavailable"
-            : "Select city"
+              ? 'Cities unavailable'
+              : 'Select city'
         }
         disabled={!values.state || cityOptions.length === 0}
         required
@@ -173,7 +177,7 @@ const VisitingCardUpload = ({
   };
 
   const handleFileKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" || event.key === " " || event.key === "Space") {
+    if (event.key === 'Enter' || event.key === ' ' || event.key === 'Space') {
       event.preventDefault();
       triggerFileDialog();
     }
@@ -237,7 +241,7 @@ const RegisterForm = () => {
   const [visitingCardFile, setVisitingCardFile] = useState<File | null>(null);
   const [cityOptions, setCityOptions] = useState<FormSelectOption[]>([]);
   const [status, setStatus] = useState<StatusState>({
-    type: "idle",
+    type: 'idle',
     message: null,
   });
 
@@ -252,13 +256,13 @@ const RegisterForm = () => {
   ) => {
     if (!visitingCardFile) {
       setStatus({
-        type: "error",
-        message: "Please upload your visiting card image before submitting.",
+        type: 'error',
+        message: 'Please upload your visiting card image before submitting.',
       });
       return;
     }
 
-    setStatus({ type: "loading", message: "Creating your account…" });
+    setStatus({ type: 'loading', message: 'Creating your account…' });
 
     try {
       const formData = new FormData();
@@ -267,10 +271,10 @@ const RegisterForm = () => {
         formData.append(key, value);
       });
 
-      formData.append("visitingCard", visitingCardFile);
+      formData.append('visitingCard', visitingCardFile);
 
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
         body: formData,
       });
 
@@ -278,15 +282,15 @@ const RegisterForm = () => {
 
       if (!response.ok) {
         const message =
-          typeof data?.error === "string" ? data.error : "Registration failed.";
-        setStatus({ type: "error", message });
+          typeof data?.error === 'string' ? data.error : 'Registration failed.';
+        setStatus({ type: 'error', message });
         return;
       }
 
       setStatus({
-        type: "success",
+        type: 'success',
         message:
-          typeof data?.message === "string"
+          typeof data?.message === 'string'
             ? data.message
             : "Registration received. We'll email you once an administrator approves your account.",
       });
@@ -294,18 +298,18 @@ const RegisterForm = () => {
       setCityOptions([]);
       setVisitingCardFile(null);
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error('Registration error:', error);
       setStatus({
-        type: "error",
-        message: "Something went wrong. Please try again.",
+        type: 'error',
+        message: 'Something went wrong. Please try again.',
       });
     }
   };
 
-  const isLoading = status.type === "loading";
+  const isLoading = status.type === 'loading';
 
   return (
-    <div className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white p-8 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+    <div className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white p-8 shadow-sm">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent" />
       <div className="relative">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
@@ -407,7 +411,7 @@ const RegisterForm = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:shadow-lg disabled:pointer-events-none disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-slate-950 hover:shadow-lg disabled:pointer-events-none disabled:opacity-60"
           >
             {isLoading ? (
               <>
@@ -421,16 +425,16 @@ const RegisterForm = () => {
         </Form>
       </Formik>
 
-      {status.type !== "idle" && status.message ? (
+      {status.type !== 'idle' && status.message ? (
         <div
-          role={status.type === "error" ? "alert" : "status"}
+          role={status.type === 'error' ? 'alert' : 'status'}
           className={`flex items-start gap-2 rounded-2xl border px-4 py-3 text-sm ${
-            status.type === "error"
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-700"
+            status.type === 'error'
+              ? 'border-red-200 bg-red-50 text-red-700'
+              : 'border-emerald-200 bg-emerald-50 text-emerald-700'
           }`}
         >
-          {status.type === "success" ? (
+          {status.type === 'success' ? (
             <CheckCircle2 className="mt-0.5 h-4 w-4" aria-hidden />
           ) : null}
           <span>{status.message}</span>
