@@ -46,7 +46,7 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    const isDev = process.env.NODE_ENV !== "production";
+    const isDev = process.env.VERCEL_ENV !== "production";
     const otpCode = isDev ? "000000" : String(randomInt(100000, 1000000));
     const otpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
     const otpCodeHash = await hash(otpCode, 10);

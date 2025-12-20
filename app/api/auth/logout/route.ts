@@ -8,7 +8,7 @@ export const POST = async () => {
     name: SESSION_COOKIE_NAME,
     value: "",
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.VERCEL_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: 0,

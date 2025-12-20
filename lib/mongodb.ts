@@ -9,7 +9,7 @@ declare global {
 
 let clientPromise: Promise<MongoClient>;
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.VERCEL_ENV === "development") {
   if (!global._mongoClientPromise) {
     const client = new MongoClient(uri);
     global._mongoClientPromise = client.connect();

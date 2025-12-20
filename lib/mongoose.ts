@@ -16,7 +16,7 @@ export const connectToDatabase = async () => {
     bufferCommands: false,
   });
 
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.VERCEL_ENV !== "production") {
     global.__mongooseConnection = connectionPromise;
   }
 
