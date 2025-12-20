@@ -50,10 +50,10 @@ const Navbar = ({
     } catch (error) {
       console.error("Failed to log out:", error);
     }
-
     dispatch(clearCredentials());
     closeMenu();
     closeProfileMenu();
+
   };
 
   const displayName = user

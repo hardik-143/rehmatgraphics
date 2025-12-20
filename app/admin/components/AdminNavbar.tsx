@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { LogOut, Menu } from 'lucide-react';
 import { Dropdown } from '@/components/ui/dropdown/Dropdown';
 import { DropdownItem } from '@/components/ui/dropdown/DropdownItem';
+import { clearCredentials } from '@/store/authSlice';
+import { useAppDispatch } from '@/store/hooks';
 
 interface CurrentAdmin {
   email: string;
@@ -23,6 +25,7 @@ const AdminNavbar = ({
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const initials = (currentAdmin.firstName || currentAdmin.email || '?')
     .split(' ')
@@ -33,6 +36,7 @@ const AdminNavbar = ({
   const logout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
+      dispatch(clearCredentials());
     } catch {
       // ignore
     } finally {
