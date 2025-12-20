@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, LogOut, Menu, X } from "lucide-react";
+import { ChevronDown, Crown, LogOut, Menu, X } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { clearCredentials } from "@/store/authSlice";
+import { clearCredentials, setCredentials } from "@/store/authSlice";
+import SubscribeButton from "./SubscribeButton";
 
 export interface NavLink {
   label: string;
@@ -69,6 +70,22 @@ const Navbar = ({
         .toUpperCase()
     : (user?.email?.[0]?.toUpperCase() ?? "");
   const isAdmin = Boolean(user?.is_admin);
+  const isSubscribed = Boolean(user?.is_subscribed);
+
+  const handleSubscriptionSuccess = () => {
+    // Update user state to reflect subscription
+    if (user) {
+      dispatch(
+        setCredentials({
+          ...user,
+          is_subscribed: true,
+          subscriptionEndDate: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+          ).toISOString(),
+        })
+      );
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-white/70 shadow-sm backdrop-blur-lg">
@@ -105,55 +122,74 @@ const Navbar = ({
 
           <div className="hidden items-center gap-3 lg:flex">
             {user ? (
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={toggleProfileMenu}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
-                >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/10 text-sm font-bold uppercase text-brand-primary">
-                    {initials}
-                  </span>
-                  <span className="max-w-[9rem] truncate text-left">
-                    {displayName}
-                  </span>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${
-                      isProfileOpen ? "rotate-180" : "rotate-0"
-                    }`}
-                    aria-hidden
+              <>
+                {!isSubscribed && (
+                  <SubscribeButton
+                    onSuccess={handleSubscriptionSuccess}
+                    prefill={{
+                      name: displayName,
+                      email: user.email,
+                      contact: user.phoneNumber,
+                    }}
+                    className="text-sm"
                   />
-                </button>
-                {isProfileOpen ? (
-                  <div className="absolute right-0 z-50 mt-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">
-                      <p className="font-semibold text-slate-900">
-                        {displayName}
-                      </p>
-                      <p className="truncate text-xs text-slate-500">
-                        {user.email}
-                      </p>
-                    </div>
-                    {isAdmin ? (
-                      <Link
-                        href="/admin"
+                )}
+                {isSubscribed && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-700">
+                    <Crown className="h-3.5 w-3.5" />
+                    Premium
+                  </span>
+                )}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={toggleProfileMenu}
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:border-brand-primary/60 hover:text-brand-primary"
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/10 text-sm font-bold uppercase text-brand-primary">
+                      {initials}
+                    </span>
+                    <span className="max-w-[9rem] truncate text-left">
+                      {displayName}
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-200 ${
+                        isProfileOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                      aria-hidden
+                    />
+                  </button>
+                  {isProfileOpen ? (
+                    <div className="absolute right-0 z-50 mt-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
+                      <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">
+                        <p className="font-semibold text-slate-900">
+                          {displayName}
+                        </p>
+                        <p className="truncate text-xs text-slate-500">
+                          {user.email}
+                        </p>
+                      </div>
+                      {isAdmin ? (
+                        <Link
+                          href="/admin"
+                          className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
+                          onClick={closeProfileMenu}
+                        >
+                          Admin Dashboard
+                        </Link>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={handleLogout}
                         className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
-                        onClick={closeProfileMenu}
                       >
-                        Admin Dashboard
-                      </Link>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-brand-primary/10 hover:text-brand-primary"
-                    >
-                      <LogOut className="h-4 w-4" aria-hidden />
-                      Logout
-                    </button>
-                  </div>
-                ) : null}
-              </div>
+                        <LogOut className="h-4 w-4" aria-hidden />
+                        Logout
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+              </>
             ) : (
               <>
                 <Link
@@ -205,17 +241,36 @@ const Navbar = ({
           <div className="mt-6 flex flex-col gap-2">
             {user ? (
               <>
-                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/10 text-base font-bold uppercase text-brand-primary">
-                    {initials}
-                  </span>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-slate-900">
-                      {displayName}
+                <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/10 text-base font-bold uppercase text-brand-primary">
+                      {initials}
                     </span>
-                    <span className="text-xs text-slate-500">{user.email}</span>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold text-slate-900">
+                        {displayName}
+                      </span>
+                      <span className="text-xs text-slate-500">{user.email}</span>
+                    </div>
                   </div>
+                  {isSubscribed && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
+                      <Crown className="h-3 w-3" />
+                      Premium
+                    </span>
+                  )}
                 </div>
+                {!isSubscribed && (
+                  <SubscribeButton
+                    onSuccess={handleSubscriptionSuccess}
+                    prefill={{
+                      name: displayName,
+                      email: user.email,
+                      contact: user.phoneNumber,
+                    }}
+                    className="w-full justify-center text-sm"
+                  />
+                )}
                 {isAdmin ? (
                   <Link
                     href="/admin"

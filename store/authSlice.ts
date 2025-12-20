@@ -20,6 +20,8 @@ export interface AuthUser {
   visitingCardOriginalFilename?: string | null;
   is_admin?: boolean;
   is_approved?: boolean;
+  is_subscribed?: boolean;
+  subscriptionEndDate?: string | null;
 }
 
 interface AuthState {
