@@ -16,7 +16,7 @@ const updateOrderSchema = z.object({
 
 export const PATCH = async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   const adminUser = await authenticateRequest(request);
   if (!adminUser)
@@ -28,9 +28,11 @@ export const PATCH = async (
     const payload = await request.json();
     const body = updateOrderSchema.parse(payload);
 
+    const { id } = await params;
+
     await connectToDatabase();
 
-    const order = await Order.findById(params.id);
+    const order = await Order.findById(id);
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
