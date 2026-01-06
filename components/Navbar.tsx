@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { ChevronDown, LogOut, Menu, X } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { clearCredentials } from "@/store/authSlice";
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ChevronDown, Crown, LogOut, Menu, User, X } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { clearCredentials, setCredentials } from '@/store/authSlice';
+import SubscribeButton from './SubscribeButton';
 
 export interface NavLink {
   label: string;
@@ -20,19 +21,20 @@ export interface NavbarProps {
 }
 
 const defaultLinks: NavLink[] = [
-  { label: "Home", href: "#home" },
-  { label: "About Us", href: "#about" },
-  { label: "Downloads", href: "#downloads" },
-  { label: "Videos", href: "#videos" },
-  { label: "Photo Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+  { label: 'Home', href: '#home' },
+  { label: 'Products', href: '/products' },
+  { label: 'About Us', href: '#about' },
+  // { label: 'Downloads', href: '#downloads' },
+  // { label: 'Videos', href: '#videos' },
+  // { label: 'Photo Gallery', href: '#gallery' },
+  // { label: 'Contact', href: '#contact' },
 ];
 
 const Navbar = ({
-  logoSrc = "/images/logo-placeholder.svg",
+  logoSrc = '/images/logo-placeholder.svg',
   links = defaultLinks,
-  loginHref = "/login",
-  registerHref = "/register",
+  loginHref = '/login',
+  registerHref = '/register',
 }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -46,29 +48,44 @@ const Navbar = ({
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch('/api/auth/logout', { method: 'POST' });
     } catch (error) {
-      console.error("Failed to log out:", error);
+      console.error('Failed to log out:', error);
     }
     dispatch(clearCredentials());
     closeMenu();
     closeProfileMenu();
-
   };
 
   const displayName = user
-    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email
-    : "";
+    ? [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email
+    : '';
   const initials = displayName
     ? displayName
-        .split(" ")
+        .split(' ')
         .map((part) => part.trim()[0])
         .filter(Boolean)
         .slice(0, 2)
-        .join("")
+        .join('')
         .toUpperCase()
-    : (user?.email?.[0]?.toUpperCase() ?? "");
+    : (user?.email?.[0]?.toUpperCase() ?? '');
   const isAdmin = Boolean(user?.is_admin);
+  const isSubscribed = Boolean(user?.is_subscribed);
+
+  const handleSubscriptionSuccess = () => {
+    // Update user state to reflect subscription
+    if (user) {
+      dispatch(
+        setCredentials({
+          ...user,
+          is_subscribed: true,
+          subscriptionEndDate: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+          ).toISOString(),
+        })
+      );
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-white/70 shadow-sm backdrop-blur-lg">
@@ -105,55 +122,82 @@ const Navbar = ({
 
           <div className="hidden items-center gap-3 lg:flex">
             {user ? (
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={toggleProfileMenu}
-                  className="inline-flex items-center gap-2 rounded-full border border-amber-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-amber-800 shadow-sm transition duration-200 hover:border-amber-600 hover:text-amber-700"
-                >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-bold uppercase text-amber-700">
-                    {initials}
-                  </span>
-                  <span className="max-w-[9rem] truncate text-left">
-                    {displayName}
-                  </span>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${
-                      isProfileOpen ? "rotate-180" : "rotate-0"
-                    }`}
-                    aria-hidden
+              <>
+                {/* {!isSubscribed && (
+                  <SubscribeButton
+                    onSuccess={handleSubscriptionSuccess}
+                    prefill={{
+                      name: displayName,
+                      email: user.email,
+                      contact: user.phoneNumber,
+                    }}
+                    className="text-sm"
                   />
-                </button>
-                {isProfileOpen ? (
-                  <div className="absolute right-0 z-50 mt-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">
-                      <p className="font-semibold text-slate-900">
-                        {displayName}
-                      </p>
-                      <p className="truncate text-xs text-slate-500">
-                        {user.email}
-                      </p>
-                    </div>
-                    {isAdmin ? (
+                )}
+                {isSubscribed && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-700">
+                    <Crown className="h-3.5 w-3.5" />
+                    Premium
+                  </span>
+                )} */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={toggleProfileMenu}
+                    className="inline-flex items-center gap-2 rounded-full border border-amber-200/70 bg-white/80 px-3 py-1.5 text-sm font-semibold text-amber-800 shadow-sm transition duration-200 hover:border-amber-600 hover:text-amber-700"
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-bold uppercase text-amber-700">
+                      {initials}
+                    </span>
+                    <span className="max-w-[9rem] truncate text-left">
+                      {displayName}
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-200 ${
+                        isProfileOpen ? 'rotate-180' : 'rotate-0'
+                      }`}
+                      aria-hidden
+                    />
+                  </button>
+                  {isProfileOpen ? (
+                    <div className="absolute right-0 z-50 mt-3 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
+                      <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">
+                        <p className="font-semibold text-slate-900">
+                          {displayName}
+                        </p>
+                        <p className="truncate text-xs text-slate-500">
+                          {user.email}
+                        </p>
+                      </div>
                       <Link
-                        href="/admin"
+                        href="/profile"
                         className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:bg-amber-50 hover:text-amber-700"
                         onClick={closeProfileMenu}
                       >
-                        Admin Dashboard
+                        <User className="h-4 w-4" aria-hidden />
+                        My Profile
                       </Link>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:bg-amber-50 hover:text-amber-700"
-                    >
-                      <LogOut className="h-4 w-4" aria-hidden />
-                      Logout
-                    </button>
-                  </div>
-                ) : null}
-              </div>
+                      {isAdmin ? (
+                        <Link
+                          href="/admin"
+                          className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:bg-amber-50 hover:text-amber-700"
+                          onClick={closeProfileMenu}
+                        >
+                          Admin Dashboard
+                        </Link>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:bg-amber-50 hover:text-amber-700"
+                      >
+                        <LogOut className="h-4 w-4" aria-hidden />
+                        Logout
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+              </>
             ) : (
               <>
                 <Link
@@ -215,7 +259,32 @@ const Navbar = ({
                     </span>
                     <span className="text-xs text-amber-700">{user.email}</span>
                   </div>
+                  {isSubscribed && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
+                      <Crown className="h-3 w-3" />
+                      Premium
+                    </span>
+                  )}
                 </div>
+                {!isSubscribed && (
+                  <SubscribeButton
+                    onSuccess={handleSubscriptionSuccess}
+                    prefill={{
+                      name: displayName,
+                      email: user.email,
+                      contact: user.phoneNumber,
+                    }}
+                    className="w-full justify-center text-sm"
+                  />
+                )}
+                <Link
+                  href="/profile"
+                  className="flex items-center justify-center gap-2 rounded-full border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-800 transition duration-200 hover:border-amber-600 hover:text-amber-700"
+                  onClick={closeMenu}
+                >
+                  <User className="h-4 w-4" aria-hidden />
+                  My Profile
+                </Link>
                 {isAdmin ? (
                   <Link
                     href="/admin"

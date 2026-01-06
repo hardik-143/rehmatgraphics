@@ -19,3 +19,7 @@ export const SMTP_USER = mustGet("SMTP_USER");
 export const SMTP_PASSWORD = mustGet("SMTP_PASSWORD");
 export const SMTP_FROM = process.env.SMTP_FROM ?? SMTP_USER;
 export const OTP_EXPIRY_MINUTES = Number(process.env.OTP_EXPIRY_MINUTES ?? 10);
+
+// Razorpay
+export const RAZORPAY_KEY_ID = mustGet("RAZOR_PAY_ID");
+export const RAZORPAY_KEY_SECRET = mustGet("RAZOR_PAY_SECRET");

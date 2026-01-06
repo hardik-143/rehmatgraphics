@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Loader2,
   LogIn,
@@ -9,7 +9,7 @@ import {
   ShieldCheck,
   KeyRound,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch } from '@/store/hooks';
 import { setCredentials } from '@/store/authSlice';
 import { Formik, Form, useFormikContext } from 'formik';
@@ -186,6 +186,7 @@ const OtpFormComponent = ({
 const LoginForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<'credentials' | 'otp'>('credentials');
   const [userId, setUserId] = useState<string | null>(null);
   const [savedEmail, setSavedEmail] = useState<string>('');
@@ -194,6 +195,17 @@ const LoginForm = () => {
     type: 'idle',
     message: null,
   });
+
+  // Check for URL parameters on component mount
+  useEffect(() => {
+    const messageParam = searchParams.get('message');
+    if (messageParam) {
+      setStatus({
+        type: 'error',
+        message: decodeURIComponent(messageParam),
+      });
+    }
+  }, [searchParams]);
 
   const resetFlow = () => {
     setUserId(null);
@@ -256,7 +268,15 @@ const LoginForm = () => {
           : 'Login successful. Redirecting…',
       });
       resetForm();
-      router.push('/');
+
+      // Check for redirect URL from sessionStorage
+      const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        sessionStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/');
+      }
     } catch (error) {
       console.error('Login error:', error);
       setStatus({
@@ -320,7 +340,15 @@ const LoginForm = () => {
       });
       resetForm();
       resetFlow();
-      router.push('/');
+
+      // Check for redirect URL from sessionStorage
+      const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        sessionStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/');
+      }
     } catch (error) {
       console.error('OTP verification error:', error);
       setStatus({

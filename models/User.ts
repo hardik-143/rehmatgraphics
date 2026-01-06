@@ -14,6 +14,8 @@ export interface UserDocument extends Document {
   passwordHash: string;
   is_admin: boolean;
   is_approved: boolean;
+  is_subscribed: boolean;
+  subscriptionEndDate?: Date;
   phoneNumber: string;
   firmName: string;
   address: UserAddress;
@@ -115,6 +117,15 @@ const UserSchema = new Schema<UserDocument>(
       type: Boolean,
       required: true,
       default: false,
+    },
+    is_subscribed: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    subscriptionEndDate: {
+      type: Date,
+      required: false,
     },
     otpCodeHash: {
       type: String,

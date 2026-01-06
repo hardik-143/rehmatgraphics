@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import type { PropsWithChildren } from "react";
-import { makePersistor, makeStore } from "./index";
+import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import type { PropsWithChildren } from 'react';
+import { makePersistor, makeStore } from './index';
+import AuthProvider from '../components/AuthProvider';
 
 export default function StoreProvider({ children }: PropsWithChildren) {
   const [[store, persistor]] = useState(() => {
@@ -16,7 +17,7 @@ export default function StoreProvider({ children }: PropsWithChildren) {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </PersistGate>
     </Provider>
   );

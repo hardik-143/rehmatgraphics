@@ -123,6 +123,8 @@ export const POST = async (request: NextRequest) => {
             user.visitingCardOriginalFilename ?? null,
           is_admin: user.is_admin,
           is_approved: user.is_approved,
+          is_subscribed: user.is_subscribed ?? false,
+          subscriptionEndDate: user.subscriptionEndDate?.toISOString() ?? null,
         },
       },
       { status: 200 }

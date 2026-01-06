@@ -1,7 +1,7 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { persistReducer, persistStore, type Persistor } from "redux-persist";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-import { authReducer } from "./authSlice";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistReducer, persistStore, type Persistor } from 'redux-persist';
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+import { authReducer } from './authSlice';
 
 const createNoopStorage = () => {
   return {
@@ -12,18 +12,18 @@ const createNoopStorage = () => {
 };
 
 const storage =
-  typeof window === "undefined"
+  typeof window === 'undefined'
     ? createNoopStorage()
-    : createWebStorage("session");
+    : createWebStorage('local');
 
 const rootReducer = combineReducers({
   auth: authReducer,
 });
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
-  whitelist: ["auth"],
+  whitelist: ['auth'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -35,20 +35,20 @@ export const makeStore = () =>
       getDefaultMiddleware({
         serializableCheck: {
           ignoredActions: [
-            "persist/PERSIST",
-            "persist/REHYDRATE",
-            "persist/FLUSH",
-            "persist/PAUSE",
-            "persist/PURGE",
-            "persist/REGISTER",
+            'persist/PERSIST',
+            'persist/REHYDRATE',
+            'persist/FLUSH',
+            'persist/PAUSE',
+            'persist/PURGE',
+            'persist/REGISTER',
           ],
         },
       }),
   });
 
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
 
 export const makePersistor = (store: AppStore): Persistor =>
   persistStore(store);

@@ -40,6 +40,7 @@ layer(base);
   --color-transparent: transparent;
   --color-white: #ffffff;
   --color-black: #101828;
+  --color-black-50: rgba(16, 24, 40, 0.5);
 
   --color-brand-25: #f2f7ff;
   --color-brand-50: #ecf3ff;
